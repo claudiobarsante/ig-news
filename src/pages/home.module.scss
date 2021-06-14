@@ -1,0 +1,44 @@
+.contentContainer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	height: calc(
+		100vh - 5rem
+	); /*to center content, substract de vh available less the hight of the nav bar*/
+	margin: 0 auto;
+	max-width: 1120px;
+	padding: 0 2rem;
+}
+
+.hero {
+	max-width: 600px;
+
+	> span {
+		/* selecting only de first level of span '>', so don't reach <span> inside de <p>*/
+		font-size: 1.5rem;
+		font-weight: bold;
+	}
+
+	h1 {
+		font-size: 4.5rem;
+		line-height: 4.5rem;
+		font-weight: 900;
+		margin-top: 2.5rem;
+
+		span {
+			color: var(--color-cyan-500);
+		}
+	}
+
+	p {
+		font-size: 1.5rem;
+		line-height: 2.5rem;
+		margin-top: 1.5rem;
+
+		span {
+			color: var(--color-cyan-500);
+			font-weight: bold;
+		}
+	}
+}
