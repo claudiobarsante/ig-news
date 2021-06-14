@@ -39,6 +39,8 @@
 				font-weight: bold;
 			}
 
+			/** even if you don't use 'content', using ::after or ::before
+			you must explicitly set content=''*/
 			&.active::after {
 				content: '';
 				height: 3px;
@@ -50,5 +52,9 @@
 				background: var(--color-yellow-500);
 			}
 		}
+	}
+
+	button {
+		margin-left: auto;
 	}
 }
