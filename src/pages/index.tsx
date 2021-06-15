@@ -36,6 +36,7 @@ export default function Home({ product }: Props) {
 	);
 }
 
+// -- SSG only for pages that renders the same content for all users
 export const getStaticProps: GetStaticProps = async () => {
 	const price = await stripe.prices.retrieve('price_1J2LKhG5gxMlocmAtkInMz1J', {
 		expand: ['product'], //get all information about the product
@@ -48,8 +49,6 @@ export const getStaticProps: GetStaticProps = async () => {
 			currency: 'USD',
 		}).format(price.unit_amount / 100), //price.unit_amount is in cents, so have to /100
 	};
-
-	console.log('product ', product);
 
 	return {
 		props: {
