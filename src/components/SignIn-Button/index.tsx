@@ -7,8 +7,6 @@ export function SignInButton() {
 	// show if user is logged in
 	const [session] = useSession();
 
-	console.log('session', session);
-
 	return session ? (
 		<button type='button' className={styles.signInButton} onClick={() => signOut()}>
 			<FaGithub color='#04d361' />
