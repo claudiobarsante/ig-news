@@ -11,15 +11,25 @@ export default NextAuth({
 			scope: 'read:user', // what info do you want to have access from the user -  more about scope https://docs.github.com/pt/developers/apps/building-oauth-apps/scopes-for-oauth-apps
 		}),
 	],
-	jwt: {
-		signingKey: process.env.SIGN_IN_KEY, // -- SIGN_IN_KEY could be any value generate by you
-	},
+	// -- still have to figure out how it'll work on production(it uses HS512) jwt: {
+	// 	signingKey: process.env.SIGN_IN_KEY, // -- SIGN_IN_KEY look on https://next-auth.js.org/warnings option 1 how to generate it
+	// },
 	callbacks: {
 		async signIn(user, account, profile) {
 			const { email } = user;
 			// -- if signIn was successful return true otherwise return false
 			try {
-				await fauna.query(q.Create(q.Collection('users'), { data: { email } }));
+				// -- q.CaseFold transform to lower case
+				// -- if find user email get info otherwise create user email
+				// -- don't forget to always search by the index defined in the collection
+				await fauna.query(
+					q.If(
+						q.Not(q.Exists(q.Match(q.Index('user_by_email'), q.Casefold(email)))),
+						q.Create(q.Collection('users'), { data: { email } }),
+						q.Get(q.Match(q.Index('user_by_email'), q.Casefold(email)))
+					)
+				);
+
 				return true;
 			} catch {
 				return false;

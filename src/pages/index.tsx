@@ -29,8 +29,9 @@ export default function Home({ product }: Props) {
 					</p>
 					<SubscribeButton priceId={product.priceId} />
 				</section>
-
-				<img src='/images/avatar.svg' alt='Girls seated on a chair coding on an laptop' />
+				<picture>
+					<img src='/images/avatar.svg' alt='Girls seated on a chair coding on an laptop' />
+				</picture>
 			</main>
 		</>
 	);
