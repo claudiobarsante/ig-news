@@ -39,7 +39,7 @@ export default function Home({ product }: Props) {
 
 // -- SSG only for pages that renders the same content for all users
 export const getStaticProps: GetStaticProps = async () => {
-	const price = await stripe.prices.retrieve('price_1J2LKhG5gxMlocmAtkInMz1J', {
+	const price = await stripe.prices.retrieve(process.env.NEXT_PUBLIC_STRIPE_SUBSCRIPTION_API_ID, {
 		expand: ['product'], //get all information about the product
 	});
 
