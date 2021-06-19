@@ -36,8 +36,16 @@ export default function Post({ post }: Props) {
  */
 export const getServerSideProps: GetServerSideProps = async ({ req, params }) => {
 	const session = await getSession({ req }); // with getSession() you could check if the user is logged in
-
 	const { slug } = params;
+	/** If user don't have an active subscription will be redirecto the home page */
+	if (!session?.activeSubscription) {
+		return {
+			redirect: {
+				destination: '/',
+				permanent: false, // -- this is not permanent, maybe int the future the user get an active subscription, so no redirection will be needed. It's important for the web crawlers to understand this
+			},
+		};
+	}
 
 	const prismic = getPrismicClient(req);
 

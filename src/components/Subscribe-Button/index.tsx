@@ -1,4 +1,5 @@
 import { signIn, useSession } from 'next-auth/client';
+import { useRouter } from 'next/router';
 import { api } from '../../services/api';
 import { getStripeJs } from '../../services/stripe-js';
 import styles from './styles.module.scss';
@@ -18,11 +19,17 @@ getStaticProps(SSG) are only used when the pages is rendering
 */
 export function SubscribeButton({ priceId }: Props) {
 	const [session] = useSession();
+	const router = useRouter();
 
 	// -- the user can only subscribe if it's logged in
 	async function handleSubscribe() {
 		if (!session) {
 			signIn('github');
+			return;
+		}
+		/** if the user already has an active subscription there's no need to subscribe again on Stripe */
+		if (session.activeSubscription) {
+			router.push('/posts');
 			return;
 		}
 		// -- checkout session on Stripe
