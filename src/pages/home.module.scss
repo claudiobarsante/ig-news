@@ -4,27 +4,27 @@
 	align-items: center;
 
 	height: calc(
-		100vh - 5rem
+		100vh - 8rem
 	); /*to center content, substract de vh available less the hight of the nav bar*/
 	margin: 0 auto;
 	max-width: 1120px;
-	padding: 0 2rem;
+	padding: 0 3.2rem;
 }
 
 .hero {
 	max-width: 600px;
 
 	> span {
-		/* selecting only de first level of span '>', so don't reach <span> inside de <p>*/
-		font-size: 1.5rem;
+		/* selecting only de first level of span '>',direct child, so don't reach <span> inside de <p>*/
+		font-size: 2.4rem;
 		font-weight: bold;
 	}
 
 	h1 {
-		font-size: 4.5rem;
-		line-height: 4.5rem;
+		font-size: 7.2rem;
+		line-height: 7.2rem;
 		font-weight: 900;
-		margin-top: 2.5rem;
+		margin-top: 4rem;
 
 		span {
 			color: var(--color-cyan-500);
@@ -32,9 +32,9 @@
 	}
 
 	p {
-		font-size: 1.5rem;
-		line-height: 2.5rem;
-		margin-top: 1.5rem;
+		font-size: 2.4rem;
+		line-height: 4rem;
+		margin-top: 2.4rem;
 
 		span {
 			color: var(--color-cyan-500);
@@ -43,6 +43,6 @@
 	}
 
 	button {
-		margin-top: 2.5rem;
+		margin-top: 4rem;
 	}
 }

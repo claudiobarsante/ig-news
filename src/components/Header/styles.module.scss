@@ -1,33 +1,33 @@
 .headerContainer {
 	border-bottom: 1px solid var(--color-gray-800);
-	height: 5rem;
+	height: 8rem;
 }
 
 .headerContent {
 	display: flex;
 	align-items: center;
 
-	height: 5rem;
+	height: 8rem;
 	margin: 0 auto;
 	max-width: 1120px;
-	padding: 0 2rem;
+	padding: 0 3.2rem;
 
 	nav {
-		margin-left: 5rem;
-		height: 5rem;
+		margin-left: 8rem;
+		height: 8rem;
 
 		a {
 			display: inline-block;
 			position: relative;
-			padding: 0 0.5rem;
-			height: 5rem;
-			line-height: 5rem;
+			padding: 0 0.8rem;
+			height: 8rem;
+			line-height: 8rem;
 			color: var(--color-gray-300);
 
 			transition: color 0.5s;
 			/* after the first <a> apply margin-left:2rem*/
 			& + a {
-				margin-left: 2rem;
+				margin-left: 3.2rem;
 			}
 
 			&:hover {

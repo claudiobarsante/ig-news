@@ -24,6 +24,7 @@ export default function PostPreview({ post }: Props) {
 	useEffect(() => {
 		if (session?.activeSubscription) router.push(`/posts/${post.slug}`);
 	}, [session]);
+
 	return (
 		<>
 			<Head>
@@ -40,7 +41,7 @@ export default function PostPreview({ post }: Props) {
 					<div className={styles.continueReading}>
 						Wanna continue reading?
 						<Link href='/'>
-							<a>Subscribe now 🤗</a>
+							<a>Subscribe now </a>
 						</Link>
 					</div>
 				</article>

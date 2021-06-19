@@ -1,24 +1,24 @@
 .container {
 	max-width: 1120px;
 	margin: 0 auto;
-	padding: 0 2rem;
+	padding: 0 3.2rem;
 }
 
 .posts {
 	max-width: 720px;
-	margin: 5rem auto 0;
+	margin: 8rem auto 0;
 	a {
 		display: block;
 
 		& + a {
 			/*for each post that is preceded by another post*/
-			margin-top: 2rem;
-			padding-top: 2rem;
+			margin-top: 3.2rem;
+			padding-top: 3.2rem;
 			border-top: 1px solid var(--color-gray-700);
 		}
 
 		time {
-			font-size: 1rem;
+			font-size: 1.6rem;
 			display: flex;
 			align-items: center;
 			color: var(--color-gray-300);
@@ -26,17 +26,17 @@
 
 		strong {
 			display: block;
-			font-size: 1.5rem;
-			margin-top: 1rem;
-			line-height: 2rem;
+			font-size: 2rem;
+			margin-top: 1.6rem;
+			line-height: 3.2rem;
 
 			transition: color 0.5s;
 		}
 
 		p {
 			color: var(--color-gray-300);
-			margin-top: 0.5rem;
-			line-height: 1.625rem;
+			margin-top: 0.8rem;
+			line-height: 2.6rem;
 		}
 
 		&:hover strong {

@@ -18,17 +18,21 @@
 	--color-yellow-500: #eba417;
 }
 
-@media screen and (max-width: 1080px) {
-	html {
-		font-size: 93.75%;
-	}
+html {
+	font-size: 62.5%;
 }
 
-@media screen and (max-width: 720px) {
-	html {
-		font-size: 87.5%;
-	}
-}
+// @media screen and (max-width: 1080px) {
+// 	html {
+// 		font-size: 87.5%;
+// 	}
+// }
+
+// @media screen and (max-width: 720px) {
+// 	html {
+// 		font-size: 93.75%;
+// 	}
+// }
 
 body {
 	background: var(--color-gray-900);
@@ -40,7 +44,7 @@ input,
 textarea,
 select,
 button {
-	font: 400 1rem 'Roboto', sans-serif;
+	font: 400 1.6rem 'Roboto', sans-serif;
 }
 
 button {

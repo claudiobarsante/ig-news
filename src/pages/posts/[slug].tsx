@@ -41,7 +41,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }) =>
 	if (!session?.activeSubscription) {
 		return {
 			redirect: {
-				destination: '/',
+				destination: `/posts/preview/${slug}`,
 				permanent: false, // -- this is not permanent, maybe int the future the user get an active subscription, so no redirection will be needed. It's important for the web crawlers to understand this
 			},
 		};
