@@ -3,15 +3,15 @@ import { Readable } from 'stream';
 import Stripe from 'stripe';
 import { stripe } from './../../services/stripe';
 import { saveSubscription } from './_lib/manageSubscription';
-
+import { buffer } from 'micro';
 // -- to transform streaming from stripe to string
-async function buffer(readable: Readable) {
-	const chunks = [];
-	for await (const chunk of readable) {
-		chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
-	}
-	return Buffer.concat(chunks);
-}
+// async function buffer(readable: Readable) {
+// 	const chunks = [];
+// 	for await (const chunk of readable) {
+// 		chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+// 	}
+// 	return Buffer.concat(chunks);
+// }
 
 // -- https://nextjs.org/docs/api-routes/api-middlewares
 // -- bodyParser Enables body parsing, you can disable it if you want to consume it as a Stream:
@@ -30,19 +30,23 @@ const relevantEvents = new Set([
 // -- to start listening= stripe listen --forward-to localhost:3000/api/webhooks
 export default async (req: NextApiRequest, res: NextApiResponse) => {
 	if (req.method === 'POST') {
-		const buff = await buffer(req);
+		const requestBuffer = await buffer(req);
 		// -- Check if the event has the secret key from stripe
-		const secret = req.headers['stripe-signature'];
+		const secret = req.headers['stripe-signature'] as string;
 
 		let event: Stripe.Event; // -- generic event type
 
 		try {
-			event = stripe.webhooks.constructEvent(buff, secret, process.env.STRIPE_WEBHOOKS_SECRET);
+			event = stripe.webhooks.constructEvent(
+				requestBuffer.toString(),
+				secret,
+				process.env.STRIPE_WEBHOOKS_SECRET
+			);
 		} catch (error) {
 			return res
 				.status(400)
 				.send(
-					`Webhook error: ${error.message}, secret ${secret}, buff ${buff} ,var ${process.env.STRIPE_WEBHOOKS_SECRET}`
+					`Webhook error: ${error.message}, secret ${secret}, buff ${requestBuffer} ,var ${process.env.STRIPE_WEBHOOKS_SECRET}`
 				);
 		}
 		const { type } = event;
