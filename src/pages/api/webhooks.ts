@@ -3,15 +3,15 @@ import { Readable } from 'stream';
 import Stripe from 'stripe';
 import { stripe } from './../../services/stripe';
 import { saveSubscription } from './_lib/manageSubscription';
-import { buffer } from 'micro';
+//import { buffer } from 'micro';
 // -- to transform streaming from stripe to string
-// async function buffer(readable: Readable) {
-// 	const chunks = [];
-// 	for await (const chunk of readable) {
-// 		chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
-// 	}
-// 	return Buffer.concat(chunks);
-// }
+async function buffer(readable: Readable) {
+	const chunks = [];
+	for await (const chunk of readable) {
+		chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+	}
+	return Buffer.concat(chunks);
+}
 
 // -- https://nextjs.org/docs/api-routes/api-middlewares
 // -- bodyParser Enables body parsing, you can disable it if you want to consume it as a Stream:
@@ -50,7 +50,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 				);
 		}
 		const { type } = event;
-
+		console.log('event', event);
 		if (relevantEvents.has(type)) {
 			try {
 				switch (type) {
