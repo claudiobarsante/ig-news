@@ -30,6 +30,7 @@ const relevantEvents = new Set([
 // -- to start listening= stripe listen --forward-to localhost:3000/api/webhooks
 export default async (req: NextApiRequest, res: NextApiResponse) => {
 	if (req.method === 'POST') {
+		
 		const requestBuffer = await buffer(req);
 		// -- Check if the event has the secret key from stripe
 		const secret = req.headers['stripe-signature'] as string;
@@ -38,9 +39,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
 		try {
 			event = stripe.webhooks.constructEvent(
-				requestBuffer.toString(),
+				requestBuffer.toString('utf-8'),
 				secret,
-				process.env.STRIPE_WEBHOOKS_SECRET.toString()
+				process.env.STRIPE_WEBHOOKS_SECRET
 			);
 		} catch (error) {
 			return res
