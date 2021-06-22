@@ -3,15 +3,15 @@ import { Readable } from 'stream';
 import Stripe from 'stripe';
 import { stripe } from './../../services/stripe';
 import { saveSubscription } from './_lib/manageSubscription';
-//import { buffer } from 'micro';
+import { buffer } from 'micro';
 // -- to transform streaming from stripe to string
-async function buffer(readable: Readable) {
-	const chunks = [];
-	for await (const chunk of readable) {
-		chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
-	}
-	return Buffer.concat(chunks);
-}
+// async function buffer(readable: Readable) {
+// 	const chunks = [];
+// 	for await (const chunk of readable) {
+// 		chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+// 	}
+// 	return Buffer.concat(chunks);
+// }
 
 // -- https://nextjs.org/docs/api-routes/api-middlewares
 // -- bodyParser Enables body parsing, you can disable it if you want to consume it as a Stream:
@@ -34,14 +34,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 		const requestBuffer = await buffer(req);
 		// -- Check if the event has the secret key from stripe
 		const secret = req.headers['stripe-signature'] as string;
+		const signingSecret = process.env.STRIPE_WEBHOOKS_SECRET;
 
 		let event: Stripe.Event; // -- generic event type
 
 		try {
 			event = stripe.webhooks.constructEvent(
-				requestBuffer.toString('utf-8'),
+				requestBuffer.toString(),
 				secret,
-				process.env.STRIPE_WEBHOOKS_SECRET
+				signingSecret
 			);
 		} catch (error) {
 			return res
