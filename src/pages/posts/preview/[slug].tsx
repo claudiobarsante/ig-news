@@ -55,7 +55,8 @@ export default function PostPreview({ post }: Props) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
 	return {
-		paths: [{ params: { slug: 'como-renomear-varios-arquivos-de-uma-vez-usando-o-terminal' } }],
+		//paths: [{ params: { slug: 'como-renomear-varios-arquivos-de-uma-vez-usando-o-terminal' } }],
+		paths: [],
 		fallback:
 			'blocking' /**If fallback is 'blocking', new paths not returned by getStaticPaths will wait for the HTML to be generated, identical to SSR (hence why blocking), and then be cached for future requests so it only happens once per path. */,
 	}; //-- if false, then any paths not returned by getStaticPaths will result in a 404 page
