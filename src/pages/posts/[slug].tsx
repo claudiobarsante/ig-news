@@ -8,6 +8,7 @@ import { RichText } from 'prismic-dom';
 import { getPrismicClient } from '../../services/prismic';
 import Head from 'next/head';
 import styles from './post.module.scss';
+
 type Props = {
 	post: { slug: string; title: string; content: string; updatedAt: string };
 };
