@@ -7,7 +7,7 @@ import styles from './home.module.scss';
 type Props = {
 	product: {
 		priceId: string;
-		amount: number;
+		amount: string;
 	};
 };
 export default function Home({ product }: Props) {
@@ -27,7 +27,7 @@ export default function Home({ product }: Props) {
 						Get access to all the publications <br />
 						<span> for {product.amount} month</span>
 					</p>
-					<SubscribeButton priceId={product.priceId} />
+					<SubscribeButton />
 				</section>
 				<picture>
 					<img src='/images/avatar.svg' alt='Girls seated on a chair coding on an laptop' />
