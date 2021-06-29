@@ -7,7 +7,7 @@ import { mocked } from 'ts-jest/utils'; // -- yarn add ts-jest -D
 jest.mock('next-auth/client');
 
 describe('SignIn button component', () => {
-	it('should renders SignIn button with text "Sign in with Github" for not authenticated user', () => {
+	it('should render SignIn button with text "Sign in with Github" for not authenticated user', () => {
 		const useSessionMocked = mocked(useSession);
 		useSessionMocked.mockReturnValueOnce([null, false]);
 
@@ -16,7 +16,8 @@ describe('SignIn button component', () => {
 		expect(screen.getByText('Sign in with GitHub')).toBeInTheDocument();
 	});
 
-	it('should renders SignIn button for  authenticated user', () => {
+	it('should render SignIn button for  authenticated user', () => {
+		// -- mocking that the user is signed in
 		const useSessionMocked = mocked(useSession);
 		useSessionMocked.mockReturnValueOnce([
 			{

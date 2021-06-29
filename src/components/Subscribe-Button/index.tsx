@@ -4,10 +4,6 @@ import { api } from '../../services/api';
 import { getStripeJs } from '../../services/stripe-js';
 import styles from './styles.module.scss';
 
-type Props = {
-	priceId: string;
-};
-
 /** places on Next that you could do operations in a safe way using
 enviroment secret variables: 
 getServerSideProps(SSR)
@@ -17,7 +13,7 @@ In this case will be the API Routes, because getServerSideProps(SSR) and
 getStaticProps(SSG) are only used when the pages is rendering
  * 
 */
-export function SubscribeButton({ priceId }: Props) {
+export function SubscribeButton() {
 	const [session] = useSession();
 	const router = useRouter();
 
