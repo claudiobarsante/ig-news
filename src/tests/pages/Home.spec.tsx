@@ -24,7 +24,7 @@ describe('Home page', () => {
 		stripePricesRetrieveMocked.mockResolvedValueOnce({
 			// -- use mockResolvedValueOnce...because stripePricesRetrieveMocked is a promise
 			id: 'fake-price-id',
-			unit_amount: 1000,
+			unit_amount: 999,
 		} as any);
 
 		const response = await getStaticProps({});
@@ -35,7 +35,7 @@ describe('Home page', () => {
 				props: {
 					product: {
 						priceId: 'fake-price-id',
-						amount: '$10.00',
+						amount: '$9.99',
 					},
 				},
 			})
