@@ -2,7 +2,7 @@ import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import { SubscribeButton } from '../components/Subscribe-Button';
 import { stripe } from '../services/stripe';
-import styles from './home.module.scss';
+import styles from './../styles/pages/home.module.scss';
 
 type Props = {
 	product: {

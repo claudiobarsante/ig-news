@@ -2,11 +2,11 @@
  * inside brackets, in this case [slug].tsx . Here we are creating the post preview */
 
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { getSession, useSession } from 'next-auth/client';
+import { useSession } from 'next-auth/client';
 import { RichText } from 'prismic-dom';
 import { getPrismicClient } from '../../../services/prismic';
 import Head from 'next/head';
-import styles from '../post.module.scss';
+import styles from '../../../styles/pages/post.module.scss';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
