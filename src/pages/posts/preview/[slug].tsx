@@ -30,18 +30,18 @@ export default function PostPreview({ post }: Props) {
 			<Head>
 				<title>{post.title} | Ignews</title>
 			</Head>
-			<main className={styles.container}>
-				<article className={styles.post}>
-					<h1>{post.title}</h1>
-					<time>{post.updatedAt}</time>
+			<main className={styles['container']}>
+				<article className={styles['post']}>
+					<h1 className={styles['post__title']}>{post.title}</h1>
+					<time className={styles['post__time']}>{post.updatedAt}</time>
 					<div
-						className={`${styles.postContent} ${styles.previewContent}`}
+						className={`${styles['post__content']} ${styles['post__content--preview']}`}
 						dangerouslySetInnerHTML={{ __html: post.content }}
 					/>
-					<div className={styles.continueReading}>
+					<div className={styles['continue-reading']}>
 						Wanna continue reading?
 						<Link href='/'>
-							<a>Subscribe now </a>
+							<a className={styles['continue-reading__subscribe']}>Subscribe now </a>
 						</Link>
 					</div>
 				</article>
