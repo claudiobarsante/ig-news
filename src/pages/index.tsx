@@ -17,20 +17,20 @@ export default function Home({ product }: Props) {
 				<title>Home | ig.news</title>
 			</Head>
 
-			<main className={styles.contentContainer}>
-				<section className={styles.hero}>
-					<span> 👏 Hey, welcome</span>
-					<h1>
-						News about <span>React</span> world
+			<main className={styles['content-container']}>
+				<section className={styles['hero']}>
+					<span className={styles['hero--greeting']}> 👏 Hey, welcome</span>
+					<h1 className={styles['hero--title']}>
+						News about <span className={styles['colored']}>React</span> world
 					</h1>
-					<p>
+					<p className={styles['hero--description']}>
 						Get access to all the publications <br />
-						<span> for {product.amount} month</span>
+						<span className={styles['amount']}> for {product.amount} month</span>
 					</p>
 					<SubscribeButton />
 				</section>
 				<picture>
-					<img src='/images/avatar.svg' alt='Girls seated on a chair coding on an laptop' />
+					<img src='/images/avatar.svg' alt='Girl seated on a chair coding on an laptop' />
 				</picture>
 			</main>
 		</>
