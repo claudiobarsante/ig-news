@@ -19,28 +19,28 @@
 	}
 }
 
-.hero--greeting {
+.hero__greeting {
 	font-size: 2.4rem;
 	font-weight: bold;
 }
 
-.hero--title {
+.hero__title {
 	font-size: 7.2rem;
 	line-height: 7.2rem;
 	font-weight: 900;
 	margin-top: 4rem;
 }
 
-.hero--title .colored {
+.hero__title .colored {
 	color: var(--color-cyan-500);
 }
 
-.hero--description {
+.hero__description {
 	font-size: 2.4rem;
 	line-height: 4rem;
 	margin-top: 2.4rem;
 }
 
-.hero--description .amount {
+.hero__description .amount {
 	color: var(--color-cyan-500);
 }

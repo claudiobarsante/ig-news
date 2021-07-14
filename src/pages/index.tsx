@@ -19,11 +19,11 @@ export default function Home({ product }: Props) {
 
 			<main className={styles['content-container']}>
 				<section className={styles['hero']}>
-					<span className={styles['hero--greeting']}> 👏 Hey, welcome</span>
-					<h1 className={styles['hero--title']}>
+					<span className={styles['hero__greeting']}> 👏 Hey, welcome</span>
+					<h1 className={styles['hero__title']}>
 						News about <span className={styles['colored']}>React</span> world
 					</h1>
-					<p className={styles['hero--description']}>
+					<p className={styles['hero__description']}>
 						Get access to all the publications <br />
 						<span className={styles['amount']}> for {product.amount} month</span>
 					</p>
