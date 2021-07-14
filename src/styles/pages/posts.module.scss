@@ -7,40 +7,40 @@
 .posts {
 	max-width: 720px;
 	margin: 8rem auto 0;
-	a {
-		display: block;
+}
 
-		& + a {
-			/*for each post that is preceded by another post*/
-			margin-top: 3.2rem;
-			padding-top: 3.2rem;
-			border-top: 1px solid var(--color-gray-700);
-		}
+.post-link {
+	display: block;
 
-		time {
-			font-size: 1.6rem;
-			display: flex;
-			align-items: center;
-			color: var(--color-gray-300);
-		}
-
-		strong {
-			display: block;
-			font-size: 2rem;
-			margin-top: 1.6rem;
-			line-height: 3.2rem;
-
-			transition: color 0.5s;
-		}
-
-		p {
-			color: var(--color-gray-300);
-			margin-top: 0.8rem;
-			line-height: 2.6rem;
-		}
-
-		&:hover strong {
-			color: var(--color-yellow-500);
-		}
+	& + a {
+		/*for each post that is preceded by another post*/
+		margin-top: 3.2rem;
+		padding-top: 3.2rem;
+		border-top: 1px solid var(--color-gray-700);
 	}
+}
+
+.post-link__time {
+	font-size: 1.6rem;
+	display: flex;
+	align-items: center;
+	color: var(--color-gray-300);
+}
+
+.post-link__title {
+	display: block;
+	font-size: 2rem;
+	margin-top: 1.6rem;
+	line-height: 3.2rem;
+	transition: color 0.5s;
+
+	&:hover {
+		color: var(--color-yellow-500);
+	}
+}
+
+.post-link__brief-description {
+	color: var(--color-gray-300);
+	margin-top: 0.8rem;
+	line-height: 2.6rem;
 }

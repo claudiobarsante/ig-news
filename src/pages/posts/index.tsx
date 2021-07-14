@@ -22,18 +22,18 @@ export default function Posts({ posts }: Props) {
 			<Head>
 				<title>Posts | Ignews</title>
 			</Head>
-			<main className={styles.container}>
-				<div className={styles.posts}>
+			<main className={styles['container']}>
+				<section className={styles['posts']}>
 					{posts.map(post => (
 						<Link key={post.slug} href={`/posts/${post.slug}`}>
-							<a>
-								<time>{post.updatedAt}</time>
-								<strong>{post.title}</strong>
-								<p>{post.excerpt}</p>
+							<a className={styles['post-link']}>
+								<time className={styles['post-link__time']}>{post.updatedAt}</time>
+								<strong className={styles['post-link__title']}>{post.title}</strong>
+								<p className={styles['post-link__brief-description']}>{post.excerpt}</p>
 							</a>
 						</Link>
 					))}
-				</div>
+				</section>
 			</main>
 		</>
 	);
