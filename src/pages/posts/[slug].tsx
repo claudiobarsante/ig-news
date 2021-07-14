@@ -21,11 +21,14 @@ export default function Post({ post }: Props) {
 			<Head>
 				<title>{post.title} | Ignews</title>
 			</Head>
-			<main className={styles.container}>
-				<article className={styles.post}>
-					<h1>{post.title}</h1>
-					<time>{post.updatedAt}</time>
-					<div className={styles.postContent} dangerouslySetInnerHTML={{ __html: post.content }} />
+			<main className={styles['container']}>
+				<article className={styles['post']}>
+					<h1 className={styles['post__title']}>{post.title}</h1>
+					<time className={styles['post__time']}>{post.updatedAt}</time>
+					<div
+						className={styles['post__content']}
+						dangerouslySetInnerHTML={{ __html: post.content }}
+					/>
 				</article>
 			</main>
 		</>
