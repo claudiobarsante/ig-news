@@ -60,7 +60,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
 		fallback:
 			'blocking' /**If fallback is 'blocking', new paths not returned by getStaticPaths will wait for the HTML to be generated, identical to SSR (hence why blocking), and then be cached for future requests so it only happens once per path. */,
 	}; //-- if false, then any paths not returned by getStaticPaths will result in a 404 page
-	// -- if true, not a good idea because causes html shifiting see complete information: https://nextjs.org/docs/basic-features/data-fetching
+	// -- if true, not a good idea because causes html shifiting information: https://nextjs.org/docs/basic-features/data-fetching
+	/* and when google
+	 -- try to index it for the first time may hcatch some errors 
+	 -- because all the information may not be available see complete*/
 };
 
 /** Remember that all pages generated with getStaticProps() are desprotected and all the content will be igual for all
