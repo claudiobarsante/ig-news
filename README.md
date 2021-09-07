@@ -1,5 +1,5 @@
-### IgNews
-![Screenshot](prints/print-home.png)
+### Simple Blog with Next.js
+![Screenshot](prints/frame_chrome_mac_light.png)
 
 
 ## Description
