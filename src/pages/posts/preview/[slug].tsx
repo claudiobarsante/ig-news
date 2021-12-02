@@ -1,5 +1,4 @@
-/** when you are dynamically creating a page, you have to pass the parameter
- * inside brackets, in this case [slug].tsx . Here we are creating the post preview */
+/*Here we are creating the post preview */
 
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useSession } from 'next-auth/client';
@@ -10,10 +9,28 @@ import styles from '../../../styles/pages/post.module.scss';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { gql } from '@apollo/client';
+import { initializeApollo } from '../../../graphql/lib/apolloClient';
 
 type Props = {
 	post: { slug: string; title: string; content: string; updatedAt: string };
 };
+
+const GET_POST_BY_SLUG_QUERY = gql`
+	query getPost($slug: String) {
+		post(where: { slug: $slug }) {
+			id
+			updatedAt
+			slug
+			name
+			content {
+				html
+				text
+				markdown
+			}
+		}
+	}
+`;
 
 /*dangerouslySetInnerHTML is a way to render content as Html, but you have to be
 aware the if this html has any malicious script could cause problems. Use dangerouslySetInnerHTML with caution */
@@ -72,25 +89,24 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
 	const { slug } = params;
 
-	const prismic = getPrismicClient();
+	const apolloClient = initializeApollo();
 
-	/*'post' is the type of the document in Prismic and the UID on Prismic we
-     set to the value of slug. Even if it's not using the ...spread on the route [slug].tsx
-     you have to convert slug to string, String(slug) because it's coming with default 
-     type string | string[]*/
-	const response = await prismic.getByUID('post', String(slug), {});
+	const { data, error } = await apolloClient.query({
+		query: GET_POST_BY_SLUG_QUERY,
+		variables: { slug: `${slug}` },
+	});
 
+	console.log('error', error, 'data', data);
 	const post = {
 		slug,
-		title: RichText.asText(response.data.title),
-		content: RichText.asHtml(response.data.content.splice(0, 3)), //getting only the first 3 blocks of the content
-		updatedAt: new Date(response.last_publication_date).toLocaleDateString('pt-BR', {
+		title: data.post.name,
+		content: data.post.content.html.slice(0, 400),
+		updatedAt: new Date(data.post.updatedAt).toLocaleDateString('pt-BR', {
 			day: '2-digit',
 			month: 'long',
 			year: 'numeric',
 		}),
 	};
-
 	return {
 		props: { post },
 		revalidate: 60 * 30, //once every 30 min
