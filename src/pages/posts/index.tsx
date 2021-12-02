@@ -1,12 +1,11 @@
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
-
 import styles from './../../styles/pages/posts.module.scss';
-
 import Link from 'next/link';
-import { gql } from '@apollo/client';
+
 import { initializeApollo } from '../../graphql/lib/apolloClient';
 import { ALL_POSTS_QUERY } from '../../graphql/queries';
+
 type Post = {
 	slug: string;
 	title: string;
