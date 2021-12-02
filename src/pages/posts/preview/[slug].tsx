@@ -2,35 +2,18 @@
 
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useSession } from 'next-auth/client';
-import { RichText } from 'prismic-dom';
-import { getPrismicClient } from '../../../services/prismic';
 import Head from 'next/head';
 import styles from '../../../styles/pages/post.module.scss';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { gql } from '@apollo/client';
+
 import { initializeApollo } from '../../../graphql/lib/apolloClient';
+import { GET_POST_BY_SLUG_QUERY } from '../../../graphql/queries';
 
 type Props = {
 	post: { slug: string; title: string; content: string; updatedAt: string };
 };
-
-const GET_POST_BY_SLUG_QUERY = gql`
-	query getPost($slug: String) {
-		post(where: { slug: $slug }) {
-			id
-			updatedAt
-			slug
-			name
-			content {
-				html
-				text
-				markdown
-			}
-		}
-	}
-`;
 
 /*dangerouslySetInnerHTML is a way to render content as Html, but you have to be
 aware the if this html has any malicious script could cause problems. Use dangerouslySetInnerHTML with caution */

@@ -6,7 +6,7 @@ import styles from './../../styles/pages/posts.module.scss';
 import Link from 'next/link';
 import { gql } from '@apollo/client';
 import { initializeApollo } from '../../graphql/lib/apolloClient';
-
+import { ALL_POSTS_QUERY } from '../../graphql/queries';
 type Post = {
 	slug: string;
 	title: string;
@@ -17,20 +17,6 @@ type Post = {
 type Props = {
 	posts: Post[];
 };
-
-const ALL_POSTS_QUERY = gql`
-	query getAllPosts {
-		posts {
-			id
-			updatedAt
-			slug
-			name
-			content {
-				html
-			}
-		}
-	}
-`;
 
 export default function Posts({ posts }: Props) {
 	return (

@@ -5,28 +5,13 @@ import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/client';
 import Head from 'next/head';
 import styles from './../../styles/pages/post.module.scss';
-import { gql } from '@apollo/client';
+import { GET_POST_BY_SLUG_QUERY } from '../../graphql/queries';
 import { initializeApollo } from '../../graphql/lib/apolloClient';
 
 type Props = {
 	post: { slug: string; title: string; content: string; updatedAt: string };
 };
 
-const GET_POST_BY_SLUG_QUERY = gql`
-	query getPost($slug: String) {
-		post(where: { slug: $slug }) {
-			id
-			updatedAt
-			slug
-			name
-			content {
-				html
-				text
-				markdown
-			}
-		}
-	}
-`;
 /*dangerouslySetInnerHTML is a way to render content as Html, but you have to be
 aware the if this html has any malicious script could cause problems. Use dangerouslySetInnerHTML with caution */
 export default function Post({ post }: Props) {
