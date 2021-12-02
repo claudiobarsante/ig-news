@@ -9,10 +9,13 @@
 		"test": "jest"
 	},
 	"dependencies": {
+		"@apollo/client": "^3.5.5",
 		"@prismicio/client": "^5.1.0",
 		"@stripe/stripe-js": "^1.15.0",
+		"apollo-link-prismic": "^1.0.9",
 		"axios": "^0.21.1",
 		"faunadb": "^4.3.0",
+		"graphql": "^16.0.1",
 		"micro": "^9.3.4",
 		"next": "10.2.3",
 		"next-auth": "^3.26.1",

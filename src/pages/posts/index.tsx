@@ -5,6 +5,8 @@ import styles from './../../styles/pages/posts.module.scss';
 import Prismic from '@prismicio/client';
 import { RichText } from 'prismic-dom';
 import Link from 'next/link';
+import { gql } from '@apollo/client';
+import { initializeApollo } from '../../graphql/lib/apolloClient';
 
 type Post = {
 	slug: string;
@@ -16,6 +18,21 @@ type Post = {
 type Props = {
 	posts: Post[];
 };
+
+const ALL_POSTS_QUERY = gql`
+	query getAllPosts {
+		posts {
+			id
+			updatedAt
+			slug
+			name
+			content {
+				html
+			}
+		}
+	}
+`;
+
 export default function Posts({ posts }: Props) {
 	return (
 		<>
@@ -29,7 +46,11 @@ export default function Posts({ posts }: Props) {
 							<a className={styles['post-link']}>
 								<time className={styles['post-link__time']}>{post.updatedAt}</time>
 								<strong className={styles['post-link__title']}>{post.title}</strong>
-								<p className={styles['post-link__brief-description']}>{post.excerpt}</p>
+								{/* <p className={styles['post-link__brief-description']}>{post.excerpt}</p> */}
+								<div
+									className={styles['post__content']}
+									dangerouslySetInnerHTML={{ __html: post.excerpt }}
+								/>
 							</a>
 						</Link>
 					))}
@@ -40,30 +61,32 @@ export default function Posts({ posts }: Props) {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-	const prismic = getPrismicClient();
+	const apolloClient = initializeApollo();
 
-	const response = await prismic.query([Prismic.predicates.at('document.type', 'post')], {
-		fetch: ['post.title', 'post.content'],
-		pageSize: 100,
+	const { data } = await apolloClient.query({
+		query: ALL_POSTS_QUERY,
 	});
+
 	// -- IMPORTANT : format all data that's needs formatation(currency,numbers,dates,price...)
 	// -- on the server side, because if you do it on the client side
 	// -- everytime that the page is accessed, the data will be formatted again !
 	// -- if you can do it on the server side, do it because the data will be formatted only once !
 	//console.log('response', JSON.stringify(response, null, 2));
-	const posts = response.results.map(post => {
+	const posts = data.posts.map(post => {
 		return {
-			slug: post.uid,
-			title: RichText.asText(post.data.title),
+			slug: post.slug,
+			title: post.name,
 			// -- try to find the first paragraph otherwise return ''
-			excerpt: post.data.content.find(content => content.type === 'paragraph')?.text ?? '',
-			updatedAt: new Date(post.last_publication_date).toLocaleDateString('pt-BR', {
+			excerpt: post.content.html.slice(0, 300) + '...',
+			updatedAt: new Date(post.updatedAt).toLocaleDateString('pt-BR', {
 				day: '2-digit',
 				month: 'long',
 				year: 'numeric',
 			}),
 		};
 	});
+
+	console.log('Posts', posts);
 	return {
 		props: { posts },
 		//revalidate: 60 * 60 * 24, //24 hours - revalidate is in seconds, so 60sec * 60 min * 24 hours
