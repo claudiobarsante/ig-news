@@ -16,7 +16,7 @@ const GET_POST_BY_SLUG_QUERY = gql`
 	query getPost($slug: String) {
 		post(where: { slug: $slug }) {
 			id
-			createdAt
+			updatedAt
 			slug
 			name
 			content {
@@ -73,7 +73,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }) =>
 
 	const post = {
 		slug,
-		title: data.post.title,
+		title: data.post.name,
 		content: data.post.content.html,
 		updatedAt: new Date(data.post.updatedAt).toLocaleDateString('pt-BR', {
 			day: '2-digit',
