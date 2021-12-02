@@ -79,7 +79,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 		variables: { slug: `${slug}` },
 	});
 
-	console.log('error', error, 'data', data);
 	const post = {
 		slug,
 		title: data.post.name,
