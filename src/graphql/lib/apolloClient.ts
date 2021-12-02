@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { PrismicLink } from 'apollo-link-prismic';
 import { ApolloClient, HttpLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client';
 
 let apolloClient: ApolloClient<NormalizedCacheObject>;

@@ -1,18 +1,32 @@
-/** when you are dynamically creating a page, you have to pass the parameter
- * inside brackets, in this case [slug].tsx . Here we are creating the post page
+/** Here we are dynamically creating the post page
  * with all it's content*/
 
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/client';
-import { RichText } from 'prismic-dom';
-import { getPrismicClient } from '../../services/prismic';
 import Head from 'next/head';
 import styles from './../../styles/pages/post.module.scss';
+import { gql } from '@apollo/client';
+import { initializeApollo } from '../../graphql/lib/apolloClient';
 
 type Props = {
 	post: { slug: string; title: string; content: string; updatedAt: string };
 };
 
+const GET_POST_BY_SLUG_QUERY = gql`
+	query getPost($slug: String) {
+		post(where: { slug: $slug }) {
+			id
+			createdAt
+			slug
+			name
+			content {
+				html
+				text
+				markdown
+			}
+		}
+	}
+`;
 /*dangerouslySetInnerHTML is a way to render content as Html, but you have to be
 aware the if this html has any malicious script could cause problems. Use dangerouslySetInnerHTML with caution */
 export default function Post({ post }: Props) {
@@ -51,19 +65,17 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }) =>
 		};
 	}
 
-	const prismic = getPrismicClient(req);
-
-	/*'post' is the type of the document in Prismic and the UID on Prismic we
-     set to the value of slug. Even if it's not using the ...spread on the route [slug].tsx
-     you have to convert slug to string, String(slug) because it's coming with default 
-     type string | string[]*/
-	const response = await prismic.getByUID('post', String(slug), {});
+	const apolloClient = initializeApollo();
+	const { data } = await apolloClient.query({
+		query: GET_POST_BY_SLUG_QUERY,
+		variables: { slug: `${slug}` },
+	});
 
 	const post = {
 		slug,
-		title: RichText.asText(response.data.title),
-		content: RichText.asHtml(response.data.content),
-		updatedAt: new Date(response.last_publication_date).toLocaleDateString('pt-BR', {
+		title: data.post.title,
+		content: data.post.content.html,
+		updatedAt: new Date(data.post.updatedAt).toLocaleDateString('pt-BR', {
 			day: '2-digit',
 			month: 'long',
 			year: 'numeric',
