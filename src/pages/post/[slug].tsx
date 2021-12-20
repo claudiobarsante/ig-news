@@ -1,13 +1,11 @@
-/** Here we are dynamically creating the post page
- * with all it's content*/
-
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/client';
 import Head from 'next/head';
 import styles from './../../styles/pages/post.module.scss';
-import { DELETE_POST, GET_POST_BY_SLUG_QUERY } from '../../graphql/queries';
+import { GET_POST_BY_SLUG_QUERY } from '../../graphql/queries';
+import { DELETE_POST } from '../../graphql/mutations';
 import { initializeApollo } from '../../graphql/lib/apolloClient';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { LoadingSpinner } from '@apollo/space-kit/Loaders/LoadingSpinner';
 import { GetPost, GetPostVariables } from './../../graphql/generated/GetPost';

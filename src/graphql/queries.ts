@@ -43,12 +43,3 @@ export const LOAD_MORE_POSTS_QUERY = gql`
 		}
 	}
 `;
-
-export const DELETE_POST = gql`
-	mutation DeletePost($postId: ID!) {
-		__typename
-		deletePost(where: { id: $postId }) {
-			id
-		}
-	}
-`;

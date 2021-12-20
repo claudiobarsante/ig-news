@@ -7,7 +7,7 @@ import { initializeApollo } from '../../graphql/lib/apolloClient';
 import { ALL_POSTS_QUERY, LOAD_MORE_POSTS_QUERY } from '../../graphql/queries';
 import { gql, useQuery } from '@apollo/client';
 import { LoadMorePosts, LoadMorePostsVariables } from './../../graphql/generated/LoadMorePosts';
-
+import ConvertDateTime from '../../utils/convertDateTime';
 type Post = {
 	slug: string;
 	title: string;
@@ -17,12 +17,15 @@ type Post = {
 
 const DEFAULT_LENGTH = 3;
 export default function Posts() {
-	const { data, loading, error, fetchMore } = useQuery(LOAD_MORE_POSTS_QUERY, {
-		variables: {
-			first: DEFAULT_LENGTH,
-			skip: 0,
-		},
-	});
+	const { data, loading, error, fetchMore } = useQuery<LoadMorePosts, LoadMorePostsVariables>(
+		LOAD_MORE_POSTS_QUERY,
+		{
+			variables: {
+				first: DEFAULT_LENGTH,
+				skip: 0,
+			},
+		}
+	);
 
 	const handleShowMore = () => {
 		fetchMore({
@@ -33,20 +36,6 @@ export default function Posts() {
 		});
 	};
 
-	const posts = data.posts.map(post => {
-		return {
-			slug: post.slug,
-			title: post.name,
-			// -- try to find the first paragraph otherwise return ''
-			excerpt: post.content.html.slice(0, 300) + '...',
-			updatedAt: new Date(post.updatedAt).toLocaleDateString('pt-BR', {
-				day: '2-digit',
-				month: 'long',
-				year: 'numeric',
-			}),
-		};
-	});
-
 	return (
 		<>
 			<Head>
@@ -54,15 +43,15 @@ export default function Posts() {
 			</Head>
 			<main className={styles['container']}>
 				<section className={styles['posts']}>
-					{posts.map(post => (
+					{data.posts.map(post => (
 						<Link key={post.slug} href={`/post/${post.slug}`}>
 							<a className={styles['post-link']}>
-								<time className={styles['post-link__time']}>{post.updatedAt}</time>
-								<strong className={styles['post-link__title']}>{post.title}</strong>
+								<time className={styles['post-link__time']}>{ConvertDateTime(post.updatedAt)}</time>
+								<strong className={styles['post-link__title']}>{post.name}</strong>
 								{/* <p className={styles['post-link__brief-description']}>{post.excerpt}</p> */}
 								<div
 									className={styles['post__content']}
-									dangerouslySetInnerHTML={{ __html: post.excerpt }}
+									dangerouslySetInnerHTML={{ __html: post.content.html.slice(0, 300) + '...' }}
 								/>
 							</a>
 						</Link>
