@@ -29,3 +29,17 @@ export const GET_POST_BY_SLUG_QUERY = gql`
 		}
 	}
 `;
+
+export const LOAD_MORE_POSTS_QUERY = gql`
+	query loadMorePosts($first: Int!, $skip: Int!) {
+		posts(first: $first, skip: $skip) {
+			id
+			updatedAt
+			slug
+			name
+			content {
+				html
+			}
+		}
+	}
+`;

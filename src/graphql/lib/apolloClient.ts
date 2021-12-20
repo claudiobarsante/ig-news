@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 import { ApolloClient, HttpLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client';
+import { concatPagination } from '@apollo/client/utilities';
 
-let apolloClient: ApolloClient<NormalizedCacheObject>;
+let apolloClient: ApolloClient<NormalizedCacheObject | null>;
 
 function createApolloClient() {
 	return new ApolloClient({
@@ -12,11 +13,19 @@ function createApolloClient() {
 				authorization: `Bearer ${process.env.NEXT_PUBLIC_GRAPHQL_TOKEN}`,
 			},
 		}),
-		cache: new InMemoryCache(),
+		cache: new InMemoryCache({
+			typePolicies: {
+				Query: {
+					fields: {
+						posts: concatPagination(['where', 'orderBy']), //has to dterminate the arguments to correctly cache
+					},
+				},
+			},
+		}),
 	});
 }
 
-export function initializeApollo(initialState = {}) {
+export function initializeApollo(initialState = null) {
 	const _apolloClient = apolloClient ?? createApolloClient();
 
 	// If your page has Next.js data fetching methods that use Apollo Client,
