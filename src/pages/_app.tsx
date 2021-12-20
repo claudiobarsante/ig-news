@@ -5,6 +5,7 @@ import '../styles/global.scss';
 import { Provider as NextAuthProvider } from 'next-auth/client';
 import { ApolloProvider } from '@apollo/client';
 import { useApollo } from '../graphql/lib/apolloClient';
+import NextNprogress from 'nextjs-progressbar';
 
 // -- you need to wrap all components with the Provider to have access to all informations about auth
 // -- from any component
@@ -14,6 +15,13 @@ function MyApp({ Component, pageProps }: AppProps) {
 		<ApolloProvider client={apolloClient}>
 			<NextAuthProvider session={pageProps.session}>
 				<Header />
+				<NextNprogress
+					color='#eba417'
+					startPosition={0.3}
+					stopDelayMs={200}
+					height={3}
+					showOnShallow={true}
+				/>
 				<Component {...pageProps} />
 			</NextAuthProvider>
 		</ApolloProvider>
