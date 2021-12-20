@@ -5,42 +5,35 @@ import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/client';
 import Head from 'next/head';
 import styles from './../../styles/pages/post.module.scss';
-import { GET_POST_BY_SLUG_QUERY } from '../../graphql/queries';
+import { DELETE_POST, GET_POST_BY_SLUG_QUERY } from '../../graphql/queries';
 import { initializeApollo } from '../../graphql/lib/apolloClient';
 import { gql, useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { LoadingSpinner } from '@apollo/space-kit/Loaders/LoadingSpinner';
-
+import { GetPost, GetPostVariables } from './../../graphql/generated/GetPost';
+import { DeletePost, DeletePostVariables } from './../../graphql/generated/DeletePost';
 type Props = {
 	post: { id: string; slug: string; title: string; content: string; updatedAt: string };
 };
 
-/*dangerouslySetInnerHTML is a way to render content as Html, but you have to be
-aware the if this html has any malicious script could cause problems. Use dangerouslySetInnerHTML with caution */
 export default function Post({ post }: Props) {
 	const router = useRouter();
 
-	const DELETE_POST = gql`
-		mutation deletePost($postId: ID!) {
-			__typename
-			deletePost(where: { id: $postId }) {
-				id
-			}
+	const [DeletePost, { data, loading, error }] = useMutation<DeletePost, DeletePostVariables>(
+		DELETE_POST,
+		{
+			variables: {
+				postId: post.id,
+			},
+			onCompleted: data => {
+				console.log(data);
+				router.push('/posts');
+			},
+			onError: error => {
+				console.log('error===>', error);
+			},
 		}
-	`;
-
-	const [deletePost, { data, loading, error }] = useMutation(DELETE_POST, {
-		variables: {
-			postId: post.id,
-		},
-		onCompleted: data => {
-			console.log(data);
-			router.push('/posts');
-		},
-		onError: error => {
-			console.log('error===>', error);
-		},
-	});
+	);
 
 	const handleUpdate = () => {
 		console.log('updated');
@@ -72,7 +65,7 @@ export default function Post({ post }: Props) {
 				<button type='button' onClick={() => handleUpdate()}>
 					update
 				</button>
-				<button type='button' onClick={() => deletePost()}>
+				<button type='button' onClick={() => DeletePost()}>
 					delete
 				</button>
 			</section>
@@ -97,7 +90,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }) =>
 	}
 
 	const apolloClient = initializeApollo();
-	const { data } = await apolloClient.query({
+	const { data } = await apolloClient.query<GetPost, GetPostVariables>({
 		query: GET_POST_BY_SLUG_QUERY,
 		variables: { slug: `${slug}` },
 	});

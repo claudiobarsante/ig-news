@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const ALL_POSTS_QUERY = gql`
-	query getAllPosts {
+	query GetAllPosts {
 		posts {
 			id
 			updatedAt
@@ -15,7 +15,7 @@ export const ALL_POSTS_QUERY = gql`
 `;
 
 export const GET_POST_BY_SLUG_QUERY = gql`
-	query getPost($slug: String) {
+	query GetPost($slug: String) {
 		post(where: { slug: $slug }) {
 			id
 			updatedAt
@@ -31,7 +31,7 @@ export const GET_POST_BY_SLUG_QUERY = gql`
 `;
 
 export const LOAD_MORE_POSTS_QUERY = gql`
-	query loadMorePosts($first: Int!, $skip: Int!) {
+	query LoadMorePosts($first: Int!, $skip: Int!) {
 		posts(first: $first, skip: $skip) {
 			id
 			updatedAt
@@ -40,6 +40,15 @@ export const LOAD_MORE_POSTS_QUERY = gql`
 			content {
 				html
 			}
+		}
+	}
+`;
+
+export const DELETE_POST = gql`
+	mutation DeletePost($postId: ID!) {
+		__typename
+		deletePost(where: { id: $postId }) {
+			id
 		}
 	}
 `;

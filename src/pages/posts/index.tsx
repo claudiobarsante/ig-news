@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { initializeApollo } from '../../graphql/lib/apolloClient';
 import { ALL_POSTS_QUERY, LOAD_MORE_POSTS_QUERY } from '../../graphql/queries';
 import { gql, useQuery } from '@apollo/client';
+import { LoadMorePosts, LoadMorePostsVariables } from './../../graphql/generated/LoadMorePosts';
 
 type Post = {
 	slug: string;
@@ -14,40 +15,24 @@ type Post = {
 	updatedAt: string;
 };
 
-type Props = {
-	posts: Post[];
-};
-
-const LOAD_MORE_POSTS = gql`
-	query loadMorePosts($first: Int, $skip: Int) {
-		posts(first: $first, skip: $skip) {
-			id
-			updatedAt
-			slug
-			name
-			content {
-				html
-			}
-		}
-	}
-`;
+const DEFAULT_LENGTH = 3;
 export default function Posts() {
 	const { data, loading, error, fetchMore } = useQuery(LOAD_MORE_POSTS_QUERY, {
 		variables: {
-			first: 2,
+			first: DEFAULT_LENGTH,
 			skip: 0,
 		},
 	});
 
 	const handleShowMore = () => {
-		console.log('passei');
 		fetchMore({
 			variables: {
-				first: 2,
+				first: DEFAULT_LENGTH,
 				skip: data?.posts.length,
 			},
 		});
 	};
+
 	const posts = data.posts.map(post => {
 		return {
 			slug: post.slug,
@@ -94,32 +79,13 @@ export default function Posts() {
 export const getStaticProps: GetStaticProps = async () => {
 	const apolloClient = initializeApollo();
 
-	const { data } = await apolloClient.query({
+	const { data } = await apolloClient.query<LoadMorePosts, LoadMorePostsVariables>({
 		query: LOAD_MORE_POSTS_QUERY,
 		variables: {
-			first: 2,
+			first: DEFAULT_LENGTH,
 			skip: 0,
 		},
 	});
-
-	// -- IMPORTANT : format all data that's needs formatation(currency,numbers,dates,price...)
-	// -- on the server side, because if you do it on the client side
-	// -- everytime that the page is accessed, the data will be formatted again !
-	// -- if you can do it on the server side, do it because the data will be formatted only once !
-	//console.log('response', JSON.stringify(response, null, 2));
-	// const posts = data.posts.map(post => {
-	// 	return {
-	// 		slug: post.slug,
-	// 		title: post.name,
-	// 		// -- try to find the first paragraph otherwise return ''
-	// 		excerpt: post.content.html.slice(0, 300) + '...',
-	// 		updatedAt: new Date(post.updatedAt).toLocaleDateString('pt-BR', {
-	// 			day: '2-digit',
-	// 			month: 'long',
-	// 			year: 'numeric',
-	// 		}),
-	// 	};
-	//});
 
 	return {
 		props: {
