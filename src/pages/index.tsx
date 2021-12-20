@@ -1,9 +1,10 @@
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
-import { SubscribeButton } from '../components/Subscribe-Button';
+import Button from '../components/Button';
+import { SubscribeButton } from '../components/SubscribeButton';
 import { stripe } from '../services/stripe';
 import styles from './../styles/pages/home.module.scss';
-
+import { FaGithub } from 'react-icons/fa';
 type Props = {
 	product: {
 		priceId: string;
@@ -11,6 +12,9 @@ type Props = {
 	};
 };
 export default function Home({ product }: Props) {
+	const fake = () => {
+		console.log('fake');
+	};
 	return (
 		<>
 			<Head>
@@ -32,6 +36,13 @@ export default function Home({ product }: Props) {
 				<picture>
 					<img src='/images/avatar.svg' alt='Girl seated on a chair coding on an laptop' />
 				</picture>
+				<Button
+					type='button'
+					onClick={fake}
+					icon={<FaGithub />}
+					state='logedOut'
+					text='user name'
+				/>
 			</main>
 		</>
 	);

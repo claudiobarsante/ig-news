@@ -7,9 +7,9 @@ function createApolloClient() {
 	return new ApolloClient({
 		ssrMode: typeof window === 'undefined', // set to true for SSR
 		link: new HttpLink({
-			uri: process.env.GRAPHQL_HOST,
+			uri: process.env.NEXT_PUBLIC_GRAPHQL_HOST,
 			headers: {
-				authorization: `Bearer ${process.env.GRAPHQL_TOKEN}`,
+				authorization: `Bearer ${process.env.NEXT_PUBLIC_GRAPHQL_TOKEN}`,
 			},
 		}),
 		cache: new InMemoryCache(),

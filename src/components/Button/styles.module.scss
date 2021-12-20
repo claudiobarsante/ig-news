@@ -1,0 +1,35 @@
+.button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	background: var(--color-gray-850);
+	border-radius: 4.8rem;
+	border: 0;
+
+	color: var(--color-white);
+
+	font-weight: bold;
+	height: 4.8rem;
+	padding: 0 2.4rem;
+
+	svg:first-child {
+		margin-right: 1.6rem;
+		color: #04d361;
+	}
+
+	svg {
+		height: 20px;
+		width: 20px;
+	}
+
+	transition: filter 0.5s;
+	/* reducing brightness for hover effect in 20%*/
+	&:hover {
+		filter: brightness(0.8);
+	}
+
+	svg.closeIcon {
+		margin-left: 1.6rem;
+	}
+}

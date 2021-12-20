@@ -26,7 +26,7 @@ export default function Posts({ posts }: Props) {
 			<main className={styles['container']}>
 				<section className={styles['posts']}>
 					{posts.map(post => (
-						<Link key={post.slug} href={`/posts/${post.slug}`}>
+						<Link key={post.slug} href={`/post/${post.slug}`}>
 							<a className={styles['post-link']}>
 								<time className={styles['post-link__time']}>{post.updatedAt}</time>
 								<strong className={styles['post-link__title']}>{post.title}</strong>

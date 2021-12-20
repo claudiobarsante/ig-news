@@ -7,14 +7,52 @@ import Head from 'next/head';
 import styles from './../../styles/pages/post.module.scss';
 import { GET_POST_BY_SLUG_QUERY } from '../../graphql/queries';
 import { initializeApollo } from '../../graphql/lib/apolloClient';
+import { gql, useMutation } from '@apollo/client';
+import { useRouter } from 'next/router';
+import { LoadingSpinner } from '@apollo/space-kit/Loaders/LoadingSpinner';
 
 type Props = {
-	post: { slug: string; title: string; content: string; updatedAt: string };
+	post: { id: string; slug: string; title: string; content: string; updatedAt: string };
 };
 
 /*dangerouslySetInnerHTML is a way to render content as Html, but you have to be
 aware the if this html has any malicious script could cause problems. Use dangerouslySetInnerHTML with caution */
 export default function Post({ post }: Props) {
+	const router = useRouter();
+
+	const DELETE_POST = gql`
+		mutation deletePost($postId: ID!) {
+			__typename
+			deletePost(where: { id: $postId }) {
+				id
+			}
+		}
+	`;
+
+	const [deletePost, { data, loading, error }] = useMutation(DELETE_POST, {
+		variables: {
+			postId: post.id,
+		},
+		onCompleted: data => {
+			console.log(data);
+			router.push('/posts');
+		},
+		onError: error => {
+			console.log('error===>', error);
+		},
+	});
+
+	const handleUpdate = () => {
+		console.log('updated');
+	};
+
+	if (loading) {
+		return (
+			<div className={styles['spinner-container']}>
+				<LoadingSpinner data-testid='spinner' size='large' theme='dark' />
+			</div>
+		);
+	}
 	return (
 		<>
 			<Head>
@@ -30,6 +68,14 @@ export default function Post({ post }: Props) {
 					/>
 				</article>
 			</main>
+			<section>
+				<button type='button' onClick={() => handleUpdate()}>
+					update
+				</button>
+				<button type='button' onClick={() => deletePost()}>
+					delete
+				</button>
+			</section>
 		</>
 	);
 }
@@ -44,7 +90,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }) =>
 	if (!session?.activeSubscription) {
 		return {
 			redirect: {
-				destination: `/posts/preview/${slug}`,
+				destination: `/post/preview/${slug}`,
 				permanent: false, // -- this is not permanent, maybe int the future the user get an active subscription, so no redirection will be needed. It's important for the web crawlers to understand this
 			},
 		};
@@ -57,6 +103,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }) =>
 	});
 
 	const post = {
+		id: data.post.id,
 		slug,
 		title: data.post.name,
 		content: data.post.content.html,

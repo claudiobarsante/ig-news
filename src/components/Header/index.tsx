@@ -1,7 +1,7 @@
 import React from 'react';
-import { SignInButton } from '../SignIn-Button';
+import { SignInButton } from '../SignInButton';
 import styles from './styles.module.scss';
-import ActiveLink from '../Active-Link';
+import ActiveLink from '../ActiveLink';
 
 export function Header() {
 	return (
