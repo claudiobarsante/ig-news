@@ -3,6 +3,8 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { PostWhereInput, PostOrderByInput } from "./globalTypes";
+
 // ====================================================
 // GraphQL query operation: LoadMorePosts
 // ====================================================
@@ -40,4 +42,6 @@ export interface LoadMorePosts {
 export interface LoadMorePostsVariables {
   first: number;
   skip: number;
+  where?: PostWhereInput | null;
+  orderBy?: PostOrderByInput | null;
 }

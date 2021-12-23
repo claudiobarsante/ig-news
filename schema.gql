@@ -926,9 +926,1053 @@ input AssetWhereUniqueInput {
 }
 
 """"""
+type Author implements Node {
+  """System stage field"""
+  stage: Stage!
+  """Get the document in other stages"""
+  documentInStages(
+    """Potential stages that should be returned"""
+    stages: [Stage!]! = [DRAFT, PUBLISHED]
+    """Decides if the current stage should be included or not"""
+    includeCurrent: Boolean! = false
+    """Decides if the documents should match the parent documents locale or should use the fallback order defined in the tree"""
+    inheritLocale: Boolean! = false
+  ): [Author!]!
+  """The unique identifier"""
+  id: ID!
+  """The time the document was created"""
+  createdAt: DateTime!
+  """The time the document was updated"""
+  updatedAt: DateTime!
+  """The time the document was published. Null on documents in draft stage."""
+  publishedAt: DateTime
+  """"""
+  name: String
+  """User that created this document"""
+  createdBy(
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `createdBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): User
+  """User that last updated this document"""
+  updatedBy(
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `updatedBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): User
+  """User that last published this document"""
+  publishedBy(
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `publishedBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): User
+  """"""
+  post(
+    """"""
+    where: PostWhereInput
+    """"""
+    orderBy: PostOrderByInput
+    """"""
+    skip: Int
+    """"""
+    after: String
+    """"""
+    before: String
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `post` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): [Post!]!
+  """"""
+  scheduledIn(
+    """"""
+    where: ScheduledOperationWhereInput
+    """"""
+    skip: Int
+    """"""
+    after: String
+    """"""
+    before: String
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `scheduledIn` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): [ScheduledOperation!]!
+  """List of Author versions"""
+  history(
+    """"""
+    limit: Int! = 10
+    """"""
+    skip: Int! = 0
+    """This is optional and can be used to fetch the document version history for a specific stage instead of the current one"""
+    stageOverride: Stage
+  ): [Version!]!
+}
+
+""""""
+input AuthorConnectInput {
+  """Document to connect"""
+  where: AuthorWhereUniqueInput!
+  """Allow to specify document position in list of connected documents, will default to appending at end of list"""
+  position: ConnectPositionInput
+}
+
+"""A connection to a list of items."""
+type AuthorConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+  """A list of edges."""
+  edges: [AuthorEdge!]!
+  """"""
+  aggregate: Aggregate!
+}
+
+""""""
+input AuthorCreateInput {
+  """"""
+  createdAt: DateTime
+  """"""
+  updatedAt: DateTime
+  """"""
+  name: String
+  """"""
+  post: PostCreateManyInlineInput
+}
+
+""""""
+input AuthorCreateManyInlineInput {
+  """Create and connect multiple existing Author documents"""
+  create: [AuthorCreateInput!]
+  """Connect multiple existing Author documents"""
+  connect: [AuthorWhereUniqueInput!]
+}
+
+""""""
+input AuthorCreateOneInlineInput {
+  """Create and connect one Author document"""
+  create: AuthorCreateInput
+  """Connect one existing Author document"""
+  connect: AuthorWhereUniqueInput
+}
+
+"""An edge in a connection."""
+type AuthorEdge {
+  """The item at the end of the edge."""
+  node: Author!
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+"""Identifies documents"""
+input AuthorManyWhereInput {
+  """Contains search across all appropriate fields."""
+  _search: String
+  """Logical AND on all given filters."""
+  AND: [AuthorWhereInput!]
+  """Logical OR on all given filters."""
+  OR: [AuthorWhereInput!]
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [AuthorWhereInput!]
+  """"""
+  id: ID
+  """All values that are not equal to given value."""
+  id_not: ID
+  """All values that are contained in given list."""
+  id_in: [ID!]
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+  """All values containing the given string."""
+  id_contains: ID
+  """All values not containing the given string."""
+  id_not_contains: ID
+  """All values starting with the given string."""
+  id_starts_with: ID
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+  """All values ending with the given string."""
+  id_ends_with: ID
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+  """"""
+  createdAt: DateTime
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  """"""
+  updatedAt: DateTime
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  """"""
+  publishedAt: DateTime
+  """All values that are not equal to given value."""
+  publishedAt_not: DateTime
+  """All values that are contained in given list."""
+  publishedAt_in: [DateTime!]
+  """All values that are not contained in given list."""
+  publishedAt_not_in: [DateTime!]
+  """All values less than the given value."""
+  publishedAt_lt: DateTime
+  """All values less than or equal the given value."""
+  publishedAt_lte: DateTime
+  """All values greater than the given value."""
+  publishedAt_gt: DateTime
+  """All values greater than or equal the given value."""
+  publishedAt_gte: DateTime
+  """"""
+  name: String
+  """All values that are not equal to given value."""
+  name_not: String
+  """All values that are contained in given list."""
+  name_in: [String!]
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+  """All values containing the given string."""
+  name_contains: String
+  """All values not containing the given string."""
+  name_not_contains: String
+  """All values starting with the given string."""
+  name_starts_with: String
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+  """All values ending with the given string."""
+  name_ends_with: String
+  """All values not ending with the given string"""
+  name_not_ends_with: String
+  """"""
+  createdBy: UserWhereInput
+  """"""
+  updatedBy: UserWhereInput
+  """"""
+  publishedBy: UserWhereInput
+  """"""
+  post_every: PostWhereInput
+  """"""
+  post_some: PostWhereInput
+  """"""
+  post_none: PostWhereInput
+  """"""
+  scheduledIn_every: ScheduledOperationWhereInput
+  """"""
+  scheduledIn_some: ScheduledOperationWhereInput
+  """"""
+  scheduledIn_none: ScheduledOperationWhereInput
+}
+
+""""""
+enum AuthorOrderByInput {
+  """"""
+  id_ASC
+  """"""
+  id_DESC
+  """"""
+  createdAt_ASC
+  """"""
+  createdAt_DESC
+  """"""
+  updatedAt_ASC
+  """"""
+  updatedAt_DESC
+  """"""
+  publishedAt_ASC
+  """"""
+  publishedAt_DESC
+  """"""
+  name_ASC
+  """"""
+  name_DESC
+}
+
+""""""
+input AuthorUpdateInput {
+  """"""
+  name: String
+  """"""
+  post: PostUpdateManyInlineInput
+}
+
+""""""
+input AuthorUpdateManyInlineInput {
+  """Create and connect multiple Author documents"""
+  create: [AuthorCreateInput!]
+  """Connect multiple existing Author documents"""
+  connect: [AuthorConnectInput!]
+  """Override currently-connected documents with multiple existing Author documents"""
+  set: [AuthorWhereUniqueInput!]
+  """Update multiple Author documents"""
+  update: [AuthorUpdateWithNestedWhereUniqueInput!]
+  """Upsert multiple Author documents"""
+  upsert: [AuthorUpsertWithNestedWhereUniqueInput!]
+  """Disconnect multiple Author documents"""
+  disconnect: [AuthorWhereUniqueInput!]
+  """Delete multiple Author documents"""
+  delete: [AuthorWhereUniqueInput!]
+}
+
+""""""
+input AuthorUpdateManyInput {
+  """No fields in updateMany data input"""
+  _: String
+}
+
+""""""
+input AuthorUpdateManyWithNestedWhereInput {
+  """Document search"""
+  where: AuthorWhereInput!
+  """Update many input"""
+  data: AuthorUpdateManyInput!
+}
+
+""""""
+input AuthorUpdateOneInlineInput {
+  """Create and connect one Author document"""
+  create: AuthorCreateInput
+  """Update single Author document"""
+  update: AuthorUpdateWithNestedWhereUniqueInput
+  """Upsert single Author document"""
+  upsert: AuthorUpsertWithNestedWhereUniqueInput
+  """Connect existing Author document"""
+  connect: AuthorWhereUniqueInput
+  """Disconnect currently connected Author document"""
+  disconnect: Boolean
+  """Delete currently connected Author document"""
+  delete: Boolean
+}
+
+""""""
+input AuthorUpdateWithNestedWhereUniqueInput {
+  """Unique document search"""
+  where: AuthorWhereUniqueInput!
+  """Document to update"""
+  data: AuthorUpdateInput!
+}
+
+""""""
+input AuthorUpsertInput {
+  """Create document if it didn't exist"""
+  create: AuthorCreateInput!
+  """Update document if it exists"""
+  update: AuthorUpdateInput!
+}
+
+""""""
+input AuthorUpsertWithNestedWhereUniqueInput {
+  """Unique document search"""
+  where: AuthorWhereUniqueInput!
+  """Upsert data"""
+  data: AuthorUpsertInput!
+}
+
+"""Identifies documents"""
+input AuthorWhereInput {
+  """Contains search across all appropriate fields."""
+  _search: String
+  """Logical AND on all given filters."""
+  AND: [AuthorWhereInput!]
+  """Logical OR on all given filters."""
+  OR: [AuthorWhereInput!]
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [AuthorWhereInput!]
+  """"""
+  id: ID
+  """All values that are not equal to given value."""
+  id_not: ID
+  """All values that are contained in given list."""
+  id_in: [ID!]
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+  """All values containing the given string."""
+  id_contains: ID
+  """All values not containing the given string."""
+  id_not_contains: ID
+  """All values starting with the given string."""
+  id_starts_with: ID
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+  """All values ending with the given string."""
+  id_ends_with: ID
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+  """"""
+  createdAt: DateTime
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  """"""
+  updatedAt: DateTime
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  """"""
+  publishedAt: DateTime
+  """All values that are not equal to given value."""
+  publishedAt_not: DateTime
+  """All values that are contained in given list."""
+  publishedAt_in: [DateTime!]
+  """All values that are not contained in given list."""
+  publishedAt_not_in: [DateTime!]
+  """All values less than the given value."""
+  publishedAt_lt: DateTime
+  """All values less than or equal the given value."""
+  publishedAt_lte: DateTime
+  """All values greater than the given value."""
+  publishedAt_gt: DateTime
+  """All values greater than or equal the given value."""
+  publishedAt_gte: DateTime
+  """"""
+  name: String
+  """All values that are not equal to given value."""
+  name_not: String
+  """All values that are contained in given list."""
+  name_in: [String!]
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+  """All values containing the given string."""
+  name_contains: String
+  """All values not containing the given string."""
+  name_not_contains: String
+  """All values starting with the given string."""
+  name_starts_with: String
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+  """All values ending with the given string."""
+  name_ends_with: String
+  """All values not ending with the given string"""
+  name_not_ends_with: String
+  """"""
+  createdBy: UserWhereInput
+  """"""
+  updatedBy: UserWhereInput
+  """"""
+  publishedBy: UserWhereInput
+  """"""
+  post_every: PostWhereInput
+  """"""
+  post_some: PostWhereInput
+  """"""
+  post_none: PostWhereInput
+  """"""
+  scheduledIn_every: ScheduledOperationWhereInput
+  """"""
+  scheduledIn_some: ScheduledOperationWhereInput
+  """"""
+  scheduledIn_none: ScheduledOperationWhereInput
+}
+
+"""References Author record uniquely"""
+input AuthorWhereUniqueInput {
+  """"""
+  id: ID
+  """"""
+  name: String
+}
+
+""""""
 type BatchPayload {
   """The number of nodes that have been affected by the Batch operation."""
   count: Long!
+}
+
+""""""
+type Category implements Node {
+  """System stage field"""
+  stage: Stage!
+  """Get the document in other stages"""
+  documentInStages(
+    """Potential stages that should be returned"""
+    stages: [Stage!]! = [DRAFT, PUBLISHED]
+    """Decides if the current stage should be included or not"""
+    includeCurrent: Boolean! = false
+    """Decides if the documents should match the parent documents locale or should use the fallback order defined in the tree"""
+    inheritLocale: Boolean! = false
+  ): [Category!]!
+  """The unique identifier"""
+  id: ID!
+  """The time the document was created"""
+  createdAt: DateTime!
+  """The time the document was updated"""
+  updatedAt: DateTime!
+  """The time the document was published. Null on documents in draft stage."""
+  publishedAt: DateTime
+  """"""
+  name: String
+  """User that created this document"""
+  createdBy(
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `createdBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): User
+  """User that last updated this document"""
+  updatedBy(
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `updatedBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): User
+  """User that last published this document"""
+  publishedBy(
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `publishedBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): User
+  """"""
+  post(
+    """"""
+    where: PostWhereInput
+    """"""
+    orderBy: PostOrderByInput
+    """"""
+    skip: Int
+    """"""
+    after: String
+    """"""
+    before: String
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `post` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): [Post!]!
+  """"""
+  scheduledIn(
+    """"""
+    where: ScheduledOperationWhereInput
+    """"""
+    skip: Int
+    """"""
+    after: String
+    """"""
+    before: String
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `scheduledIn` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): [ScheduledOperation!]!
+  """List of Category versions"""
+  history(
+    """"""
+    limit: Int! = 10
+    """"""
+    skip: Int! = 0
+    """This is optional and can be used to fetch the document version history for a specific stage instead of the current one"""
+    stageOverride: Stage
+  ): [Version!]!
+}
+
+""""""
+input CategoryConnectInput {
+  """Document to connect"""
+  where: CategoryWhereUniqueInput!
+  """Allow to specify document position in list of connected documents, will default to appending at end of list"""
+  position: ConnectPositionInput
+}
+
+"""A connection to a list of items."""
+type CategoryConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+  """A list of edges."""
+  edges: [CategoryEdge!]!
+  """"""
+  aggregate: Aggregate!
+}
+
+""""""
+input CategoryCreateInput {
+  """"""
+  createdAt: DateTime
+  """"""
+  updatedAt: DateTime
+  """"""
+  name: String
+  """"""
+  post: PostCreateManyInlineInput
+}
+
+""""""
+input CategoryCreateManyInlineInput {
+  """Create and connect multiple existing Category documents"""
+  create: [CategoryCreateInput!]
+  """Connect multiple existing Category documents"""
+  connect: [CategoryWhereUniqueInput!]
+}
+
+""""""
+input CategoryCreateOneInlineInput {
+  """Create and connect one Category document"""
+  create: CategoryCreateInput
+  """Connect one existing Category document"""
+  connect: CategoryWhereUniqueInput
+}
+
+"""An edge in a connection."""
+type CategoryEdge {
+  """The item at the end of the edge."""
+  node: Category!
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+"""Identifies documents"""
+input CategoryManyWhereInput {
+  """Contains search across all appropriate fields."""
+  _search: String
+  """Logical AND on all given filters."""
+  AND: [CategoryWhereInput!]
+  """Logical OR on all given filters."""
+  OR: [CategoryWhereInput!]
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [CategoryWhereInput!]
+  """"""
+  id: ID
+  """All values that are not equal to given value."""
+  id_not: ID
+  """All values that are contained in given list."""
+  id_in: [ID!]
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+  """All values containing the given string."""
+  id_contains: ID
+  """All values not containing the given string."""
+  id_not_contains: ID
+  """All values starting with the given string."""
+  id_starts_with: ID
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+  """All values ending with the given string."""
+  id_ends_with: ID
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+  """"""
+  createdAt: DateTime
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  """"""
+  updatedAt: DateTime
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  """"""
+  publishedAt: DateTime
+  """All values that are not equal to given value."""
+  publishedAt_not: DateTime
+  """All values that are contained in given list."""
+  publishedAt_in: [DateTime!]
+  """All values that are not contained in given list."""
+  publishedAt_not_in: [DateTime!]
+  """All values less than the given value."""
+  publishedAt_lt: DateTime
+  """All values less than or equal the given value."""
+  publishedAt_lte: DateTime
+  """All values greater than the given value."""
+  publishedAt_gt: DateTime
+  """All values greater than or equal the given value."""
+  publishedAt_gte: DateTime
+  """"""
+  name: String
+  """All values that are not equal to given value."""
+  name_not: String
+  """All values that are contained in given list."""
+  name_in: [String!]
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+  """All values containing the given string."""
+  name_contains: String
+  """All values not containing the given string."""
+  name_not_contains: String
+  """All values starting with the given string."""
+  name_starts_with: String
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+  """All values ending with the given string."""
+  name_ends_with: String
+  """All values not ending with the given string"""
+  name_not_ends_with: String
+  """"""
+  createdBy: UserWhereInput
+  """"""
+  updatedBy: UserWhereInput
+  """"""
+  publishedBy: UserWhereInput
+  """"""
+  post_every: PostWhereInput
+  """"""
+  post_some: PostWhereInput
+  """"""
+  post_none: PostWhereInput
+  """"""
+  scheduledIn_every: ScheduledOperationWhereInput
+  """"""
+  scheduledIn_some: ScheduledOperationWhereInput
+  """"""
+  scheduledIn_none: ScheduledOperationWhereInput
+}
+
+""""""
+enum CategoryOrderByInput {
+  """"""
+  id_ASC
+  """"""
+  id_DESC
+  """"""
+  createdAt_ASC
+  """"""
+  createdAt_DESC
+  """"""
+  updatedAt_ASC
+  """"""
+  updatedAt_DESC
+  """"""
+  publishedAt_ASC
+  """"""
+  publishedAt_DESC
+  """"""
+  name_ASC
+  """"""
+  name_DESC
+}
+
+""""""
+input CategoryUpdateInput {
+  """"""
+  name: String
+  """"""
+  post: PostUpdateManyInlineInput
+}
+
+""""""
+input CategoryUpdateManyInlineInput {
+  """Create and connect multiple Category documents"""
+  create: [CategoryCreateInput!]
+  """Connect multiple existing Category documents"""
+  connect: [CategoryConnectInput!]
+  """Override currently-connected documents with multiple existing Category documents"""
+  set: [CategoryWhereUniqueInput!]
+  """Update multiple Category documents"""
+  update: [CategoryUpdateWithNestedWhereUniqueInput!]
+  """Upsert multiple Category documents"""
+  upsert: [CategoryUpsertWithNestedWhereUniqueInput!]
+  """Disconnect multiple Category documents"""
+  disconnect: [CategoryWhereUniqueInput!]
+  """Delete multiple Category documents"""
+  delete: [CategoryWhereUniqueInput!]
+}
+
+""""""
+input CategoryUpdateManyInput {
+  """No fields in updateMany data input"""
+  _: String
+}
+
+""""""
+input CategoryUpdateManyWithNestedWhereInput {
+  """Document search"""
+  where: CategoryWhereInput!
+  """Update many input"""
+  data: CategoryUpdateManyInput!
+}
+
+""""""
+input CategoryUpdateOneInlineInput {
+  """Create and connect one Category document"""
+  create: CategoryCreateInput
+  """Update single Category document"""
+  update: CategoryUpdateWithNestedWhereUniqueInput
+  """Upsert single Category document"""
+  upsert: CategoryUpsertWithNestedWhereUniqueInput
+  """Connect existing Category document"""
+  connect: CategoryWhereUniqueInput
+  """Disconnect currently connected Category document"""
+  disconnect: Boolean
+  """Delete currently connected Category document"""
+  delete: Boolean
+}
+
+""""""
+input CategoryUpdateWithNestedWhereUniqueInput {
+  """Unique document search"""
+  where: CategoryWhereUniqueInput!
+  """Document to update"""
+  data: CategoryUpdateInput!
+}
+
+""""""
+input CategoryUpsertInput {
+  """Create document if it didn't exist"""
+  create: CategoryCreateInput!
+  """Update document if it exists"""
+  update: CategoryUpdateInput!
+}
+
+""""""
+input CategoryUpsertWithNestedWhereUniqueInput {
+  """Unique document search"""
+  where: CategoryWhereUniqueInput!
+  """Upsert data"""
+  data: CategoryUpsertInput!
+}
+
+"""Identifies documents"""
+input CategoryWhereInput {
+  """Contains search across all appropriate fields."""
+  _search: String
+  """Logical AND on all given filters."""
+  AND: [CategoryWhereInput!]
+  """Logical OR on all given filters."""
+  OR: [CategoryWhereInput!]
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [CategoryWhereInput!]
+  """"""
+  id: ID
+  """All values that are not equal to given value."""
+  id_not: ID
+  """All values that are contained in given list."""
+  id_in: [ID!]
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+  """All values containing the given string."""
+  id_contains: ID
+  """All values not containing the given string."""
+  id_not_contains: ID
+  """All values starting with the given string."""
+  id_starts_with: ID
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+  """All values ending with the given string."""
+  id_ends_with: ID
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+  """"""
+  createdAt: DateTime
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  """"""
+  updatedAt: DateTime
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  """"""
+  publishedAt: DateTime
+  """All values that are not equal to given value."""
+  publishedAt_not: DateTime
+  """All values that are contained in given list."""
+  publishedAt_in: [DateTime!]
+  """All values that are not contained in given list."""
+  publishedAt_not_in: [DateTime!]
+  """All values less than the given value."""
+  publishedAt_lt: DateTime
+  """All values less than or equal the given value."""
+  publishedAt_lte: DateTime
+  """All values greater than the given value."""
+  publishedAt_gt: DateTime
+  """All values greater than or equal the given value."""
+  publishedAt_gte: DateTime
+  """"""
+  name: String
+  """All values that are not equal to given value."""
+  name_not: String
+  """All values that are contained in given list."""
+  name_in: [String!]
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+  """All values containing the given string."""
+  name_contains: String
+  """All values not containing the given string."""
+  name_not_contains: String
+  """All values starting with the given string."""
+  name_starts_with: String
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+  """All values ending with the given string."""
+  name_ends_with: String
+  """All values not ending with the given string"""
+  name_not_ends_with: String
+  """"""
+  createdBy: UserWhereInput
+  """"""
+  updatedBy: UserWhereInput
+  """"""
+  publishedBy: UserWhereInput
+  """"""
+  post_every: PostWhereInput
+  """"""
+  post_some: PostWhereInput
+  """"""
+  post_none: PostWhereInput
+  """"""
+  scheduledIn_every: ScheduledOperationWhereInput
+  """"""
+  scheduledIn_some: ScheduledOperationWhereInput
+  """"""
+  scheduledIn_none: ScheduledOperationWhereInput
+}
+
+"""References Category record uniquely"""
+input CategoryWhereUniqueInput {
+  """"""
+  id: ID
+  """"""
+  name: String
 }
 
 """Representing a color value comprising of HEX, RGBA and css color values"""
@@ -1457,6 +2501,292 @@ type Mutation {
     """Optionally attach this scheduled operation to an existing release"""
     releaseId: String
   ): Post
+  """Create one category"""
+  createCategory(data: CategoryCreateInput!): Category
+  """Update one category"""
+  updateCategory(where: CategoryWhereUniqueInput!, data: CategoryUpdateInput!): Category
+  """Delete one category from _all_ existing stages. Returns deleted document."""
+  deleteCategory(
+    """Document to delete"""
+    where: CategoryWhereUniqueInput!
+  ): Category
+  """Upsert one category"""
+  upsertCategory(where: CategoryWhereUniqueInput!, upsert: CategoryUpsertInput!): Category
+  """Publish one category"""
+  publishCategory(
+    """Document to publish"""
+    where: CategoryWhereUniqueInput!
+    """Publishing target stage"""
+    to: [Stage!]! = [PUBLISHED]
+  ): Category
+  """Unpublish one category from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only."""
+  unpublishCategory(
+    """Document to unpublish"""
+    where: CategoryWhereUniqueInput!
+    """Stages to unpublish document from"""
+    from: [Stage!]! = [PUBLISHED]
+  ): Category
+  """Update many Category documents"""
+  updateManyCategoriesConnection(
+    """Documents to apply update on"""
+    where: CategoryManyWhereInput
+    """Updates to document content"""
+    data: CategoryUpdateManyInput!
+    """"""
+    skip: Int
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """"""
+    before: ID
+    """"""
+    after: ID
+  ): CategoryConnection!
+  """Delete many Category documents, return deleted documents"""
+  deleteManyCategoriesConnection(
+    """Documents to delete"""
+    where: CategoryManyWhereInput
+    """"""
+    skip: Int
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """"""
+    before: ID
+    """"""
+    after: ID
+  ): CategoryConnection!
+  """Publish many Category documents"""
+  publishManyCategoriesConnection(
+    """Identifies documents in each stage to be published"""
+    where: CategoryManyWhereInput
+    """Stage to find matching documents in"""
+    from: Stage = DRAFT
+    """Stages to publish documents to"""
+    to: [Stage!]! = [PUBLISHED]
+    """"""
+    skip: Int
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """"""
+    before: ID
+    """"""
+    after: ID
+  ): CategoryConnection!
+  """Find many Category documents that match criteria in specified stage and unpublish from target stages"""
+  unpublishManyCategoriesConnection(
+    """Identifies documents in draft stage"""
+    where: CategoryManyWhereInput
+    """Stage to find matching documents in"""
+    stage: Stage = DRAFT
+    """Stages to unpublish documents from"""
+    from: [Stage!]! = [PUBLISHED]
+    """"""
+    skip: Int
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """"""
+    before: ID
+    """"""
+    after: ID
+  ): CategoryConnection!
+  """Update many categories"""
+  updateManyCategories(
+    """Documents to apply update on"""
+    where: CategoryManyWhereInput
+    """Updates to document content"""
+    data: CategoryUpdateManyInput!
+  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (updateManyCategoriesConnection)")
+  """Delete many Category documents"""
+  deleteManyCategories(
+    """Documents to delete"""
+    where: CategoryManyWhereInput
+  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (deleteManyCategoriesConnection)")
+  """Publish many Category documents"""
+  publishManyCategories(
+    """Identifies documents in each stage to be published"""
+    where: CategoryManyWhereInput
+    """Stages to publish documents to"""
+    to: [Stage!]! = [PUBLISHED]
+  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (publishManyCategoriesConnection)")
+  """Unpublish many Category documents"""
+  unpublishManyCategories(
+    """Identifies documents in each stage"""
+    where: CategoryManyWhereInput
+    """Stages to unpublish documents from"""
+    from: [Stage!]! = [PUBLISHED]
+  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (unpublishManyCategoriesConnection)")
+  """Schedule to publish one category"""
+  schedulePublishCategory(
+    """Document to publish"""
+    where: CategoryWhereUniqueInput!
+    """Publishing target stage"""
+    to: [Stage!]! = [PUBLISHED]
+    """Release at point in time, will create new release containing this operation"""
+    releaseAt: DateTime
+    """Optionally attach this scheduled operation to an existing release"""
+    releaseId: String
+  ): Category
+  """Unpublish one category from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only."""
+  scheduleUnpublishCategory(
+    """Document to unpublish"""
+    where: CategoryWhereUniqueInput!
+    """Stages to unpublish document from"""
+    from: [Stage!]! = [PUBLISHED]
+    """Release at point in time, will create new release containing this operation"""
+    releaseAt: DateTime
+    """Optionally attach this scheduled operation to an existing release"""
+    releaseId: String
+  ): Category
+  """Create one author"""
+  createAuthor(data: AuthorCreateInput!): Author
+  """Update one author"""
+  updateAuthor(where: AuthorWhereUniqueInput!, data: AuthorUpdateInput!): Author
+  """Delete one author from _all_ existing stages. Returns deleted document."""
+  deleteAuthor(
+    """Document to delete"""
+    where: AuthorWhereUniqueInput!
+  ): Author
+  """Upsert one author"""
+  upsertAuthor(where: AuthorWhereUniqueInput!, upsert: AuthorUpsertInput!): Author
+  """Publish one author"""
+  publishAuthor(
+    """Document to publish"""
+    where: AuthorWhereUniqueInput!
+    """Publishing target stage"""
+    to: [Stage!]! = [PUBLISHED]
+  ): Author
+  """Unpublish one author from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only."""
+  unpublishAuthor(
+    """Document to unpublish"""
+    where: AuthorWhereUniqueInput!
+    """Stages to unpublish document from"""
+    from: [Stage!]! = [PUBLISHED]
+  ): Author
+  """Update many Author documents"""
+  updateManyAuthorsConnection(
+    """Documents to apply update on"""
+    where: AuthorManyWhereInput
+    """Updates to document content"""
+    data: AuthorUpdateManyInput!
+    """"""
+    skip: Int
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """"""
+    before: ID
+    """"""
+    after: ID
+  ): AuthorConnection!
+  """Delete many Author documents, return deleted documents"""
+  deleteManyAuthorsConnection(
+    """Documents to delete"""
+    where: AuthorManyWhereInput
+    """"""
+    skip: Int
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """"""
+    before: ID
+    """"""
+    after: ID
+  ): AuthorConnection!
+  """Publish many Author documents"""
+  publishManyAuthorsConnection(
+    """Identifies documents in each stage to be published"""
+    where: AuthorManyWhereInput
+    """Stage to find matching documents in"""
+    from: Stage = DRAFT
+    """Stages to publish documents to"""
+    to: [Stage!]! = [PUBLISHED]
+    """"""
+    skip: Int
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """"""
+    before: ID
+    """"""
+    after: ID
+  ): AuthorConnection!
+  """Find many Author documents that match criteria in specified stage and unpublish from target stages"""
+  unpublishManyAuthorsConnection(
+    """Identifies documents in draft stage"""
+    where: AuthorManyWhereInput
+    """Stage to find matching documents in"""
+    stage: Stage = DRAFT
+    """Stages to unpublish documents from"""
+    from: [Stage!]! = [PUBLISHED]
+    """"""
+    skip: Int
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """"""
+    before: ID
+    """"""
+    after: ID
+  ): AuthorConnection!
+  """Update many authors"""
+  updateManyAuthors(
+    """Documents to apply update on"""
+    where: AuthorManyWhereInput
+    """Updates to document content"""
+    data: AuthorUpdateManyInput!
+  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (updateManyAuthorsConnection)")
+  """Delete many Author documents"""
+  deleteManyAuthors(
+    """Documents to delete"""
+    where: AuthorManyWhereInput
+  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (deleteManyAuthorsConnection)")
+  """Publish many Author documents"""
+  publishManyAuthors(
+    """Identifies documents in each stage to be published"""
+    where: AuthorManyWhereInput
+    """Stages to publish documents to"""
+    to: [Stage!]! = [PUBLISHED]
+  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (publishManyAuthorsConnection)")
+  """Unpublish many Author documents"""
+  unpublishManyAuthors(
+    """Identifies documents in each stage"""
+    where: AuthorManyWhereInput
+    """Stages to unpublish documents from"""
+    from: [Stage!]! = [PUBLISHED]
+  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (unpublishManyAuthorsConnection)")
+  """Schedule to publish one author"""
+  schedulePublishAuthor(
+    """Document to publish"""
+    where: AuthorWhereUniqueInput!
+    """Publishing target stage"""
+    to: [Stage!]! = [PUBLISHED]
+    """Release at point in time, will create new release containing this operation"""
+    releaseAt: DateTime
+    """Optionally attach this scheduled operation to an existing release"""
+    releaseId: String
+  ): Author
+  """Unpublish one author from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only."""
+  scheduleUnpublishAuthor(
+    """Document to unpublish"""
+    where: AuthorWhereUniqueInput!
+    """Stages to unpublish document from"""
+    from: [Stage!]! = [PUBLISHED]
+    """Release at point in time, will create new release containing this operation"""
+    releaseAt: DateTime
+    """Optionally attach this scheduled operation to an existing release"""
+    releaseId: String
+  ): Author
 }
 
 """An object with an ID"""
@@ -1545,6 +2875,30 @@ type Post implements Node {
     locales: [Locale!]
   ): User
   """"""
+  category(
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `category` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): Category
+  """"""
+  author(
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `author` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): Author
+  """"""
   scheduledIn(
     """"""
     where: ScheduledOperationWhereInput
@@ -1609,6 +2963,10 @@ input PostCreateInput {
   content: RichTextAST!
   """"""
   slug: String
+  """"""
+  category: CategoryCreateOneInlineInput
+  """"""
+  author: AuthorCreateOneInlineInput
 }
 
 """"""
@@ -1760,6 +3118,10 @@ input PostManyWhereInput {
   """"""
   publishedBy: UserWhereInput
   """"""
+  category: CategoryWhereInput
+  """"""
+  author: AuthorWhereInput
+  """"""
   scheduledIn_every: ScheduledOperationWhereInput
   """"""
   scheduledIn_some: ScheduledOperationWhereInput
@@ -1803,6 +3165,10 @@ input PostUpdateInput {
   content: RichTextAST
   """"""
   slug: String
+  """"""
+  category: CategoryUpdateOneInlineInput
+  """"""
+  author: AuthorUpdateOneInlineInput
 }
 
 """"""
@@ -2001,6 +3367,10 @@ input PostWhereInput {
   updatedBy: UserWhereInput
   """"""
   publishedBy: UserWhereInput
+  """"""
+  category: CategoryWhereInput
+  """"""
+  author: AuthorWhereInput
   """"""
   scheduledIn_every: ScheduledOperationWhereInput
   """"""
@@ -2409,6 +3779,154 @@ type Query {
   ): PostConnection!
   """Retrieve document version"""
   postVersion(where: VersionWhereInput!): DocumentVersion
+  """Retrieve multiple categories"""
+  categories(
+    """"""
+    where: CategoryWhereInput
+    """"""
+    orderBy: CategoryOrderByInput
+    """"""
+    skip: Int
+    """"""
+    after: String
+    """"""
+    before: String
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """"""
+    stage: Stage! = PUBLISHED
+    """
+    Defines which locales should be returned.
+    
+    Note that `Category` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
+    """
+    locales: [Locale!]! = [en]
+  ): [Category!]!
+  """Retrieve a single category"""
+  category(
+    """"""
+    where: CategoryWhereUniqueInput!
+    """"""
+    stage: Stage! = PUBLISHED
+    """
+    Defines which locales should be returned.
+    
+    Note that `Category` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
+    """
+    locales: [Locale!]! = [en]
+  ): Category
+  """Retrieve multiple categories using the Relay connection interface"""
+  categoriesConnection(
+    """"""
+    where: CategoryWhereInput
+    """"""
+    orderBy: CategoryOrderByInput
+    """"""
+    skip: Int
+    """"""
+    after: String
+    """"""
+    before: String
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """"""
+    stage: Stage! = PUBLISHED
+    """
+    Defines which locales should be returned.
+    
+    Note that `Category` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
+    """
+    locales: [Locale!]! = [en]
+  ): CategoryConnection!
+  """Retrieve document version"""
+  categoryVersion(where: VersionWhereInput!): DocumentVersion
+  """Retrieve multiple authors"""
+  authors(
+    """"""
+    where: AuthorWhereInput
+    """"""
+    orderBy: AuthorOrderByInput
+    """"""
+    skip: Int
+    """"""
+    after: String
+    """"""
+    before: String
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """"""
+    stage: Stage! = PUBLISHED
+    """
+    Defines which locales should be returned.
+    
+    Note that `Author` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
+    """
+    locales: [Locale!]! = [en]
+  ): [Author!]!
+  """Retrieve a single author"""
+  author(
+    """"""
+    where: AuthorWhereUniqueInput!
+    """"""
+    stage: Stage! = PUBLISHED
+    """
+    Defines which locales should be returned.
+    
+    Note that `Author` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
+    """
+    locales: [Locale!]! = [en]
+  ): Author
+  """Retrieve multiple authors using the Relay connection interface"""
+  authorsConnection(
+    """"""
+    where: AuthorWhereInput
+    """"""
+    orderBy: AuthorOrderByInput
+    """"""
+    skip: Int
+    """"""
+    after: String
+    """"""
+    before: String
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """"""
+    stage: Stage! = PUBLISHED
+    """
+    Defines which locales should be returned.
+    
+    Note that `Author` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
+    """
+    locales: [Locale!]! = [en]
+  ): AuthorConnection!
+  """Retrieve document version"""
+  authorVersion(where: VersionWhereInput!): DocumentVersion
 }
 
 """Representing a RGBA color value: https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#rgb()_and_rgba()"""
@@ -2558,7 +4076,7 @@ type ScheduledOperation implements Node {
 }
 
 """"""
-union ScheduledOperationAffectedDocument = Asset | Post
+union ScheduledOperationAffectedDocument = Asset | Author | Category | Post
 
 """"""
 input ScheduledOperationConnectInput {

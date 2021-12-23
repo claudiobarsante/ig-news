@@ -1,4 +1,4 @@
-import { GetStaticProps } from 'next';
+import { GetServerSideProps, GetServerSidePropsContext, GetStaticProps } from 'next';
 import Head from 'next/head';
 import styles from './../../styles/pages/posts.module.scss';
 import Link from 'next/link';
@@ -7,48 +7,89 @@ import { LOAD_MORE_POSTS_QUERY } from '../../graphql/queries';
 import { useQuery } from '@apollo/client';
 import { LoadMorePosts, LoadMorePostsVariables } from './../../graphql/generated/LoadMorePosts';
 import ConvertDateTime from '../../utils/convertDateTime';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { parseQueryStringToWhere } from '../../utils/filter';
+import { PostOrderByInput } from '../../graphql/generated/globalTypes';
+import { ParsedUrlQuery, ParsedUrlQueryInput } from 'querystring';
+import { useRouter } from 'next/router';
 
 const DEFAULT_LENGTH = 3;
 
 export type Category = {
 	[name: string]: boolean;
 };
-export default function Posts() {
-	const [radio, setRadio] = useState('');
-	const [isChecked, setIsChecked] = useState<Category>({
+
+export const filterItems = [
+	{ name: 'category', type: 'checkbox' },
+	{ name: 'author', type: 'checkbox' },
+	{ name: 'orderBy', type: 'radio' },
+];
+
+export default function Posts({ filterItems }) {
+	const [radio, setRadio] = useState('publishedAt_DESC');
+	const [categories, setCategories] = useState<Category>({
 		testing: false,
 		programming: false,
 	});
 
+	const { push, query, pathname, asPath } = useRouter();
+
+	console.log('query client', query);
 	const { data, loading, error, fetchMore } = useQuery<LoadMorePosts, LoadMorePostsVariables>(
 		LOAD_MORE_POSTS_QUERY,
 		{
 			variables: {
 				first: DEFAULT_LENGTH,
 				skip: 0,
+				where: parseQueryStringToWhere({ queryString: query, filterItems }),
+				orderBy: query?.orderBy
+					? PostOrderByInput[query.orderBy as string]
+					: PostOrderByInput.publishedAt_DESC,
 			},
 		}
 	);
+
+	useEffect(() => {
+		updateQueryResuts();
+	}, [radio, categories]);
+
+	const updateQueryResuts = () => {
+		let updatedCategoriesQuery = [];
+
+		for (let category in categories) {
+			if (categories[category]) {
+				if (updatedCategoriesQuery.indexOf(category) === -1) {
+					updatedCategoriesQuery.push(category);
+				}
+			}
+		}
+
+		query['category'] = updatedCategoriesQuery;
+		query['orderBy'] = radio;
+
+		push({ pathname, query });
+
+		return;
+	};
 
 	const handleShowMore = () => {
 		fetchMore({
 			variables: {
 				first: DEFAULT_LENGTH,
 				skip: data?.posts.length,
+				where: parseQueryStringToWhere({ queryString: query, filterItems }),
+				orderBy: PostOrderByInput[query.orderBy as string],
 			},
 		});
 	};
 
 	const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setRadio(e.target.value);
-		console.log('e -> value ', e.target.value);
 	};
 
 	const handleCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const updated = { ...isChecked, [e.target.name]: e.target.checked };
-
-		setIsChecked(updated);
+		const updated = { ...categories, [e.target.name]: e.target.checked };
+		setCategories(updated);
 	};
 
 	return (
@@ -65,7 +106,7 @@ export default function Posts() {
 								type='checkbox'
 								name='testing'
 								onChange={handleCheck}
-								checked={isChecked.testing}
+								checked={categories.testing}
 							/>
 							Testing
 						</label>
@@ -74,7 +115,7 @@ export default function Posts() {
 								type='checkbox'
 								name='programming'
 								onChange={handleCheck}
-								checked={isChecked.programming}
+								checked={categories.programming}
 							/>
 							Programming
 						</label>
@@ -82,22 +123,22 @@ export default function Posts() {
 					<section>
 						<h3>Order by</h3>
 						<input
-							checked={radio === 'newest'}
+							checked={radio === 'publishedAt_DESC'}
 							id='newest'
 							name='radioGroup'
 							onChange={handleRadioChange}
 							type='radio'
-							value='newest'
+							value='publishedAt_DESC'
 						/>
 						<label htmlFor='newest'>Newest first</label>
 
 						<input
-							checked={radio === 'oldest'}
+							checked={radio === 'publishedAt_ASC'}
 							id='oldest'
 							name='radioGroup'
 							onChange={handleRadioChange}
 							type='radio'
-							value='oldest'
+							value='publishedAt_ASC'
 						/>
 						<label htmlFor='oldest'>Oldest first</label>
 					</section>
@@ -128,7 +169,9 @@ export default function Posts() {
 	);
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({
+	query,
+}: GetServerSidePropsContext) => {
 	const apolloClient = initializeApollo();
 
 	const { data } = await apolloClient.query<LoadMorePosts, LoadMorePostsVariables>({
@@ -136,13 +179,15 @@ export const getStaticProps: GetStaticProps = async () => {
 		variables: {
 			first: DEFAULT_LENGTH,
 			skip: 0,
+			where: parseQueryStringToWhere({ queryString: query, filterItems }),
+			orderBy: PostOrderByInput.publishedAt_DESC,
 		},
 	});
 
 	return {
 		props: {
-			initialApolloState: apolloClient.cache.extract(), //initial load to cache
+			initialApolloState: apolloClient.cache.extract(),
+			filterItems, //initial load to cache
 		},
-		revalidate: 60 * 60 * 24, //24 hours - revalidate is in seconds, so 60sec * 60 min * 24 hours
 	};
 };

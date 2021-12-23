@@ -30,9 +30,16 @@ export const GET_POST_BY_SLUG_QUERY = gql`
 	}
 `;
 
+// publishedAt_ASC
+// publishedAt_DESC
 export const LOAD_MORE_POSTS_QUERY = gql`
-	query LoadMorePosts($first: Int!, $skip: Int!) {
-		posts(first: $first, skip: $skip) {
+	query LoadMorePosts(
+		$first: Int!
+		$skip: Int!
+		$where: PostWhereInput
+		$orderBy: PostOrderByInput
+	) {
+		posts(first: $first, skip: $skip, where: $where, orderBy: $orderBy) {
 			id
 			updatedAt
 			slug
