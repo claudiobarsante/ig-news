@@ -7,10 +7,20 @@ import { LOAD_MORE_POSTS_QUERY } from '../../graphql/queries';
 import { useQuery } from '@apollo/client';
 import { LoadMorePosts, LoadMorePostsVariables } from './../../graphql/generated/LoadMorePosts';
 import ConvertDateTime from '../../utils/convertDateTime';
+import { useState } from 'react';
 
 const DEFAULT_LENGTH = 3;
 
+export type Category = {
+	[name: string]: boolean;
+};
 export default function Posts() {
+	const [radio, setRadio] = useState('');
+	const [isChecked, setIsChecked] = useState<Category>({
+		testing: false,
+		programming: false,
+	});
+
 	const { data, loading, error, fetchMore } = useQuery<LoadMorePosts, LoadMorePostsVariables>(
 		LOAD_MORE_POSTS_QUERY,
 		{
@@ -30,12 +40,68 @@ export default function Posts() {
 		});
 	};
 
+	const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setRadio(e.target.value);
+		console.log('e -> value ', e.target.value);
+	};
+
+	const handleCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const updated = { ...isChecked, [e.target.name]: e.target.checked };
+
+		setIsChecked(updated);
+	};
+
 	return (
 		<>
 			<Head>
 				<title>Posts | Ignews</title>
 			</Head>
 			<main className={styles['container']}>
+				<aside>
+					<fieldset>
+						<h3>Categories</h3>
+						<label>
+							<input
+								type='checkbox'
+								name='testing'
+								onChange={handleCheck}
+								checked={isChecked.testing}
+							/>
+							Testing
+						</label>
+						<label>
+							<input
+								type='checkbox'
+								name='programming'
+								onChange={handleCheck}
+								checked={isChecked.programming}
+							/>
+							Programming
+						</label>
+					</fieldset>
+					<section>
+						<h3>Order by</h3>
+						<input
+							checked={radio === 'newest'}
+							id='newest'
+							name='radioGroup'
+							onChange={handleRadioChange}
+							type='radio'
+							value='newest'
+						/>
+						<label htmlFor='newest'>Newest first</label>
+
+						<input
+							checked={radio === 'oldest'}
+							id='oldest'
+							name='radioGroup'
+							onChange={handleRadioChange}
+							type='radio'
+							value='oldest'
+						/>
+						<label htmlFor='oldest'>Oldest first</label>
+					</section>
+				</aside>
 				<section className={styles['posts']}>
 					{data &&
 						data.posts.map(post => (

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import Home, { getStaticProps } from '../../pages';
 import { useSession } from 'next-auth/client';
-import { mocked } from 'ts-jest/utils'; // -- yarn add ts-jest -D
+import { mocked } from 'jest-mock';
 import { stripe } from '../../services/stripe';
 
 jest.mock('next/router');
