@@ -30,8 +30,6 @@ export const GET_POST_BY_SLUG_QUERY = gql`
 	}
 `;
 
-// publishedAt_ASC
-// publishedAt_DESC
 export const LOAD_MORE_POSTS_QUERY = gql`
 	query LoadMorePosts(
 		$first: Int!

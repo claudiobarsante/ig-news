@@ -1,3 +1,4 @@
+import { PostOrderByInput } from '../../graphql/generated/globalTypes';
 import { LOAD_MORE_POSTS_QUERY } from '../../graphql/queries';
 
 export const postMock = {
@@ -6,6 +7,8 @@ export const postMock = {
 		variables: {
 			first: 3,
 			skip: 0,
+			where: {},
+			orderBy: PostOrderByInput.publishedAt_DESC,
 		},
 	},
 	result: jest.fn().mockReturnValue({
@@ -13,7 +16,7 @@ export const postMock = {
 			posts: [
 				{
 					__typename: 'Post',
-					id: 'id2',
+					id: 'id1',
 					updatedAt: '2021-12-20T17:50:39.983534+00:00',
 					slug: 'slug1',
 					name: 'test1',
@@ -30,6 +33,8 @@ export const postFetchMoreMock = {
 		variables: {
 			first: 3,
 			skip: 1,
+			where: {},
+			orderBy: PostOrderByInput.publishedAt_DESC,
 		},
 	},
 	result: jest.fn().mockReturnValue({
@@ -37,7 +42,7 @@ export const postFetchMoreMock = {
 			posts: [
 				{
 					__typename: 'Post',
-					id: 'id1',
+					id: 'id2',
 					updatedAt: '2021-12-20T17:50:39.983534+00:00',
 					slug: 'slug2',
 					name: 'test2',

@@ -34,7 +34,6 @@ export default function Posts({ filterItems }) {
 
 	const { push, query, pathname, asPath } = useRouter();
 
-	console.log('query client', query);
 	const { data, loading, error, fetchMore } = useQuery<LoadMorePosts, LoadMorePostsVariables>(
 		LOAD_MORE_POSTS_QUERY,
 		{
@@ -68,8 +67,6 @@ export default function Posts({ filterItems }) {
 		query['orderBy'] = radio;
 
 		push({ pathname, query });
-
-		return;
 	};
 
 	const handleShowMore = () => {
