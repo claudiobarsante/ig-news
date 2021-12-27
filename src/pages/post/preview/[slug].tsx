@@ -56,7 +56,7 @@ export default function PostPreview({ post }: Props) {
 export const getStaticPaths: GetStaticPaths = async () => {
 	return {
 		//paths: [{ params: { slug: 'como-renomear-varios-arquivos-de-uma-vez-usando-o-terminal' } }],
-		paths: [],
+		paths: [{ params: { slug: 'the-best-thing' } }, { params: { slug: 'eeeeeeeeeeeeeeeee' } }],
 		fallback:
 			'blocking' /**If fallback is 'blocking', new paths not returned by getStaticPaths will wait for the HTML to be generated, identical to SSR (hence why blocking), and then be cached for future requests so it only happens once per path. */,
 	}; //-- if false, then any paths not returned by getStaticPaths will result in a 404 page
@@ -77,7 +77,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 	const { data, error } = await apolloClient.query({
 		query: GET_POST_BY_SLUG_QUERY,
 		variables: { slug: `${slug}` },
+		fetchPolicy: 'no-cache', // to make sure that always will be fetched with new data
 	});
+
+	if (!data.length) {
+		return { notFound: true };
+	}
 
 	const post = {
 		slug,

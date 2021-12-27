@@ -12,6 +12,7 @@ import { parseQueryStringToWhere } from '../../utils/filter';
 import { PostOrderByInput } from '../../graphql/generated/globalTypes';
 import { ParsedUrlQuery, ParsedUrlQueryInput } from 'querystring';
 import { useRouter } from 'next/router';
+import { checkPostsCount } from '../../utils/checkPostsCount';
 
 const DEFAULT_LENGTH = 3;
 
@@ -25,6 +26,13 @@ export const filterItems = [
 	{ name: 'orderBy', type: 'radio' },
 ];
 
+// export function checkPostsCount(totalPosts: number, currentPosts: number) {
+// 	/*Graphcms has this property postsConnection that returns the total number of posts.
+// 	return data?.postsConnection.aggregate.count > data?.posts.length
+// 	So just compare the total x current number of posts. If they are equal there's no more posts tos how */
+// 	return totalPosts > currentPosts;
+// }
+
 export default function Posts({ filterItems }) {
 	const [radio, setRadio] = useState('publishedAt_DESC');
 	const [categories, setCategories] = useState<Category>({
@@ -32,7 +40,7 @@ export default function Posts({ filterItems }) {
 		programming: false,
 	});
 
-	const { push, query, pathname, asPath } = useRouter();
+	const { push, query, pathname } = useRouter();
 
 	const { data, loading, error, fetchMore } = useQuery<LoadMorePosts, LoadMorePostsVariables>(
 		LOAD_MORE_POSTS_QUERY,
@@ -71,6 +79,7 @@ export default function Posts({ filterItems }) {
 
 	const handleShowMore = () => {
 		fetchMore({
+			notifyOnNetworkStatusChange: true,
 			variables: {
 				first: DEFAULT_LENGTH,
 				skip: data?.posts.length,
@@ -89,13 +98,16 @@ export default function Posts({ filterItems }) {
 		setCategories(updated);
 	};
 
+	const isToShowButton = checkPostsCount(data?.postsConnection.aggregate.count, data?.posts.length);
+
 	return (
 		<>
 			<Head>
 				<title>Posts | Ignews</title>
 			</Head>
 			<main className={styles['container']}>
-				<aside>
+				<div className={styles['top']}></div>
+				<aside className={styles['aside']}>
 					<fieldset>
 						<h3>Categories</h3>
 						<label>
@@ -141,6 +153,8 @@ export default function Posts({ filterItems }) {
 					</section>
 				</aside>
 				<section className={styles['posts']}>
+					{loading && <img src='/images/dots.svg' alt='Loading more...' />}
+
 					{data &&
 						data.posts.map(post => (
 							<Link key={post.slug} href={`/post/${post.slug}`}>
@@ -159,9 +173,11 @@ export default function Posts({ filterItems }) {
 						))}
 				</section>
 			</main>
-			<button type='button' onClick={() => handleShowMore()}>
-				Show more
-			</button>
+			{isToShowButton && (
+				<button type='button' onClick={() => handleShowMore()}>
+					Show more
+				</button>
+			)}
 		</>
 	);
 }
@@ -183,8 +199,8 @@ export const getServerSideProps: GetServerSideProps = async ({
 
 	return {
 		props: {
-			initialApolloState: apolloClient.cache.extract(),
-			filterItems, //initial load to cache
+			initialApolloState: apolloClient.cache.extract(), //initial load to cache
+			filterItems,
 		},
 	};
 };

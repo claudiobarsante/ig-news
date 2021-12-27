@@ -46,5 +46,10 @@ export const LOAD_MORE_POSTS_QUERY = gql`
 				html
 			}
 		}
+		postsConnection(orderBy: $orderBy, where: $where) {
+			aggregate {
+				count
+			}
+		}
 	}
 `;

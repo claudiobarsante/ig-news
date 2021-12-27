@@ -23,6 +23,11 @@ export const postMock = {
 					content: { __typename: 'RichText', html: '<p>eeeeeeeeee</p>' },
 				},
 			],
+			postsConnection: {
+				aggregate: {
+					count: 12,
+				},
+			},
 		},
 	}),
 };
@@ -49,6 +54,11 @@ export const postFetchMoreMock = {
 					content: { __typename: 'RichText', html: '<p>eeeeeeeeee</p>' },
 				},
 			],
+			postsConnection: {
+				aggregate: {
+					count: 12,
+				},
+			},
 		},
 	}),
 };

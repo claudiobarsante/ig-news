@@ -32,11 +32,25 @@ export interface LoadMorePosts_posts {
   content: LoadMorePosts_posts_content;
 }
 
+export interface LoadMorePosts_postsConnection_aggregate {
+  __typename: "Aggregate";
+  count: number;
+}
+
+export interface LoadMorePosts_postsConnection {
+  __typename: "PostConnection";
+  aggregate: LoadMorePosts_postsConnection_aggregate;
+}
+
 export interface LoadMorePosts {
   /**
    * Retrieve multiple posts
    */
   posts: LoadMorePosts_posts[];
+  /**
+   * Retrieve multiple posts using the Relay connection interface
+   */
+  postsConnection: LoadMorePosts_postsConnection;
 }
 
 export interface LoadMorePostsVariables {
