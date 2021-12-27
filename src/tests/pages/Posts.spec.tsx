@@ -1,11 +1,11 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MockedProvider } from '@apollo/client/testing';
-import Posts from '../../pages/posts';
-import * as math from '../../pages/posts';
+import Posts, { filterItems } from '../../pages/posts';
+
 import { postMock, postFetchMoreMock } from '../mocks/mocks';
 import apolloCache from '../../graphql/lib/apolloCache';
-import posts, { filterItems } from '../../pages/posts';
+
 import { mocked } from 'jest-mock';
 import { checkPostsCount } from '../../utils/checkPostsCount';
 
@@ -27,19 +27,27 @@ jest.mock('next/router', () => ({
 	},
 }));
 
-jest.mock('../../utils/checkPostsCount');
+//! Still have to figure out why it don't work importing function from Posts page
+jest.mock('../../utils/checkPostsCount', () => {
+	const original = jest.requireActual('../../utils/checkPostsCount'); // Step 2.
+	return {
+		...original,
+		checkPostsCount: jest.fn(),
+	};
+});
 
 describe('Apollo', () => {
 	it('should render posts', async () => {
 		const mockedCheckPostsCountFunction = mocked(checkPostsCount);
 		mockedCheckPostsCountFunction.mockReturnValue(true);
+
 		render(
 			<MockedProvider mocks={[postMock]}>
 				<Posts filterItems={filterItems} />
 			</MockedProvider>
 		);
-
-		expect(screen.getByRole('button', { name: /show more/i }));
+		await waitFor(() => expect(screen.getByRole('button', { name: /show more/i })));
+		//expect(screen.getByRole('button', { name: /show more/i }));
 		await waitFor(() => expect(screen.getByText('test1')).toBeInTheDocument());
 	});
 
@@ -53,7 +61,7 @@ describe('Apollo', () => {
 
 		await waitFor(() => expect(screen.getByText('test1')).toBeInTheDocument());
 
-		const button = screen.getByRole('button', { name: /show more/i });
+		const button = screen.queryByRole('button', { name: /show more/i });
 
 		userEvent.click(button);
 

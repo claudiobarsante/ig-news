@@ -33,7 +33,7 @@ export const filterItems = [
 // 	return totalPosts > currentPosts;
 // }
 
-export default function Posts({ filterItems }) {
+const Posts = ({ filterItems }) => {
 	const [radio, setRadio] = useState('publishedAt_DESC');
 	const [categories, setCategories] = useState<Category>({
 		testing: false,
@@ -180,7 +180,9 @@ export default function Posts({ filterItems }) {
 			)}
 		</>
 	);
-}
+};
+
+export default Posts;
 
 export const getServerSideProps: GetServerSideProps = async ({
 	query,
