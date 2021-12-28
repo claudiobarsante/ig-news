@@ -64,10 +64,11 @@
 		margin-right: 0.5rem;
 	}
 
-	overflow-wrap: break-word;
-	-ms-word-wrap: break-word;
-	word-wrap: break-word;
-	max-width: fit-content;
+	span {
+		overflow-wrap: break-word;
+		-ms-word-wrap: break-word;
+		word-wrap: break-word;
+	}
 
 	@media screen and (max-width: 500px) {
 		max-width: 121px;

@@ -117,7 +117,7 @@ const Posts = ({ filterItems }) => {
 								onChange={handleCheck}
 								checked={categories.testing}
 							/>
-							Testing
+							<span>Testingdf gdgdf gdfgdfgdfgdfg</span>
 						</label>
 						<label className={styles['checkbox-item']}>
 							<input
@@ -126,7 +126,7 @@ const Posts = ({ filterItems }) => {
 								onChange={handleCheck}
 								checked={categories.programming}
 							/>
-							Programming
+							<span>Programming</span>
 						</label>
 
 						<div className={styles['orderBy']}>
