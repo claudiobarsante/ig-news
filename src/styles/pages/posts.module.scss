@@ -9,16 +9,69 @@
 	max-width: 1120px;
 	margin: 0 auto;
 	padding: 0 3.2rem;
+
+	@media screen and (max-width: 500px) {
+		grid-template-rows: 3% 97%;
+		grid-template-columns: max-content;
+		gap: 1rem;
+		padding: 0 1.2rem;
+		margin: 3rem auto;
+	}
 }
 
 .top {
 	//margin: 7rem auto 0;
+
 	width: 100%;
 	border: 1px solid red;
 }
 .aside {
 	grid-area: aside;
 	border: 1px solid green;
+
+	@media screen and (max-width: 500px) {
+		max-width: 121px;
+	}
+}
+
+.filters {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+
+	h3:first-child {
+		margin-bottom: 0.5rem;
+	}
+}
+
+.orderBy {
+	margin-top: 2rem;
+}
+
+.orderBy__radio {
+	margin: 1rem 0;
+
+	label {
+		margin-left: 0.5rem;
+	}
+}
+
+.checkbox-item {
+	margin: 0.5rem 0;
+
+	input {
+		margin-right: 0.5rem;
+	}
+
+	overflow-wrap: break-word;
+	-ms-word-wrap: break-word;
+	word-wrap: break-word;
+	max-width: fit-content;
+
+	@media screen and (max-width: 500px) {
+		max-width: 121px;
+	}
 }
 .posts {
 	grid-area: posts;

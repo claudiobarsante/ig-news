@@ -108,9 +108,9 @@ const Posts = ({ filterItems }) => {
 			<main className={styles['container']}>
 				<div className={styles['top']}></div>
 				<aside className={styles['aside']}>
-					<fieldset>
+					<fieldset className={styles['filters']}>
 						<h3>Categories</h3>
-						<label>
+						<label className={styles['checkbox-item']}>
 							<input
 								type='checkbox'
 								name='testing'
@@ -119,7 +119,7 @@ const Posts = ({ filterItems }) => {
 							/>
 							Testing
 						</label>
-						<label>
+						<label className={styles['checkbox-item']}>
 							<input
 								type='checkbox'
 								name='programming'
@@ -128,29 +128,33 @@ const Posts = ({ filterItems }) => {
 							/>
 							Programming
 						</label>
-					</fieldset>
-					<section>
-						<h3>Order by</h3>
-						<input
-							checked={radio === 'publishedAt_DESC'}
-							id='newest'
-							name='radioGroup'
-							onChange={handleRadioChange}
-							type='radio'
-							value='publishedAt_DESC'
-						/>
-						<label htmlFor='newest'>Newest first</label>
 
-						<input
-							checked={radio === 'publishedAt_ASC'}
-							id='oldest'
-							name='radioGroup'
-							onChange={handleRadioChange}
-							type='radio'
-							value='publishedAt_ASC'
-						/>
-						<label htmlFor='oldest'>Oldest first</label>
-					</section>
+						<div className={styles['orderBy']}>
+							<h3>Order by</h3>
+							<div className={styles['orderBy__radio']}>
+								<input
+									checked={radio === 'publishedAt_DESC'}
+									id='newest'
+									name='radioGroup'
+									onChange={handleRadioChange}
+									type='radio'
+									value='publishedAt_DESC'
+								/>
+								<label htmlFor='newest'>Newest first</label>
+							</div>
+							<div className={styles['orderBy__radio']}>
+								<input
+									checked={radio === 'publishedAt_ASC'}
+									id='oldest'
+									name='radioGroup'
+									onChange={handleRadioChange}
+									type='radio'
+									value='publishedAt_ASC'
+								/>
+								<label htmlFor='oldest'>Oldest first</label>
+							</div>
+						</div>
+					</fieldset>
 				</aside>
 				<section className={styles['posts']}>
 					{loading && <img src='/images/dots.svg' alt='Loading more...' />}
