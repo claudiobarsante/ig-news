@@ -6,7 +6,7 @@ import { initializeApollo } from 'graphql/lib/apolloClient';
 import { LOAD_MORE_POSTS_QUERY } from 'graphql/queries';
 import { useQuery } from '@apollo/client';
 import { LoadMorePosts, LoadMorePostsVariables } from 'graphql/generated/LoadMorePosts';
-import ConvertDateTime from 'utils/convertDateTime';
+import { convertDateTime } from 'utils/convertDateTime';
 import { useEffect, useState } from 'react';
 import { parseQueryStringToWhere } from 'utils/filter';
 import { PostOrderByInput } from '../../graphql/generated/globalTypes';

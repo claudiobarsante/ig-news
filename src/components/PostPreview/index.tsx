@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import ConvertDateTime from 'utils/convertDateTime';
+import convertDateTime from '../../utils/convertDateTime';
 import styles from 'styles/pages/posts.module.scss';
 import { LoadMorePosts_posts } from 'graphql/generated/LoadMorePosts';
 import { memo } from 'react';
@@ -9,7 +9,8 @@ type Props = {
 };
 const PostPreviewComponent = ({ postContent }: Props) => {
 	const { updatedAt, slug, name, content } = postContent;
-	const convertedTime = ConvertDateTime(updatedAt);
+	console.log('postContent', postContent);
+	const convertedTime = convertDateTime(updatedAt);
 	const formatedContent = `${content.html.slice(0, 300)}...`;
 	return (
 		<Link key={slug} href={`/post/${slug}`}>

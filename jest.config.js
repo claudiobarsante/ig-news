@@ -7,6 +7,7 @@ module.exports = {
 	testEnvironment: 'jsdom',
 	moduleNameMapper: {
 		'\\.(scss|css|sass)$': 'identity-obj-proxy',
+		'src/(.*)': '<rootDir>/src/$1',
 	},
 };
 
