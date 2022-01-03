@@ -1,18 +1,19 @@
 import { GetServerSideProps, GetServerSidePropsContext, GetStaticProps } from 'next';
 import Head from 'next/head';
-import styles from './../../styles/pages/posts.module.scss';
+import styles from 'styles/pages/posts.module.scss';
 import Link from 'next/link';
-import { initializeApollo } from '../../graphql/lib/apolloClient';
-import { LOAD_MORE_POSTS_QUERY } from '../../graphql/queries';
+import { initializeApollo } from 'graphql/lib/apolloClient';
+import { LOAD_MORE_POSTS_QUERY } from 'graphql/queries';
 import { useQuery } from '@apollo/client';
-import { LoadMorePosts, LoadMorePostsVariables } from './../../graphql/generated/LoadMorePosts';
-import ConvertDateTime from '../../utils/convertDateTime';
+import { LoadMorePosts, LoadMorePostsVariables } from 'graphql/generated/LoadMorePosts';
+import ConvertDateTime from 'utils/convertDateTime';
 import { useEffect, useState } from 'react';
-import { parseQueryStringToWhere } from '../../utils/filter';
+import { parseQueryStringToWhere } from 'utils/filter';
 import { PostOrderByInput } from '../../graphql/generated/globalTypes';
 import { ParsedUrlQuery, ParsedUrlQueryInput } from 'querystring';
 import { useRouter } from 'next/router';
-import { checkPostsCount } from '../../utils/checkPostsCount';
+import { checkPostsCount } from 'utils/checkPostsCount';
+import { PostPreview } from 'components/PostPreview';
 
 const DEFAULT_LENGTH = 3;
 
@@ -159,22 +160,7 @@ const Posts = ({ filterItems }) => {
 				<section className={styles['posts']}>
 					{loading && <img src='/images/dots.svg' alt='Loading more...' />}
 
-					{data &&
-						data.posts.map(post => (
-							<Link key={post.slug} href={`/post/${post.slug}`}>
-								<a className={styles['post-link']}>
-									<time className={styles['post-link__time']}>
-										{ConvertDateTime(post.updatedAt)}
-									</time>
-									<strong className={styles['post-link__title']}>{post.name}</strong>
-									{/* <p className={styles['post-link__brief-description']}>{post.excerpt}</p> */}
-									<div
-										className={styles['post__content']}
-										dangerouslySetInnerHTML={{ __html: post.content.html.slice(0, 300) + '...' }}
-									/>
-								</a>
-							</Link>
-						))}
+					{data && data.posts.map(post => <PostPreview postContent={post} />)}
 				</section>
 			</main>
 			{isToShowButton && (

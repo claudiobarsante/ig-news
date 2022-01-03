@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 
 import { initializeApollo } from '../../../graphql/lib/apolloClient';
 import { GET_POST_BY_SLUG_QUERY } from '../../../graphql/queries';
+import { GetPost, GetPostVariables } from './../../../graphql/generated/GetPost';
 
 type Props = {
 	post: { slug: string; title: string; content: string; updatedAt: string };
@@ -74,13 +75,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
 	const apolloClient = initializeApollo();
 
-	const { data, error } = await apolloClient.query({
+	const { data, error } = await apolloClient.query<GetPost, GetPostVariables>({
 		query: GET_POST_BY_SLUG_QUERY,
 		variables: { slug: `${slug}` },
 		fetchPolicy: 'no-cache', // to make sure that always will be fetched with new data
 	});
 
-	if (!data.length) {
+	if (!data.post) {
 		return { notFound: true };
 	}
 
