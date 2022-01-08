@@ -1,8 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { PostPreview } from '.';
+import * as Post from '.';
 import { LoadMorePosts_posts } from 'graphql/generated/LoadMorePosts';
 import { mocked } from 'jest-mock';
-import convertDateTime from '../../utils/convertDateTime';
+import { convertDateTime } from 'utils/convertDateTime';
 
 const post: LoadMorePosts_posts = {
 	id: 'ckxjc2rqgwimt0e82jas9u0pm',
@@ -13,18 +13,38 @@ const post: LoadMorePosts_posts = {
 	__typename: 'Post',
 };
 
-jest.mock('../../utils/convertDateTime');
+jest.mock('utils/convertDateTime');
+type LinkProps = {
+	href: '/post/esse-e-de-devops';
+	as?: '/post/esse-e-de-devops';
+};
+
+jest.mock('next/link', () => {
+	const React = require('react');
+
+	return ({ children, href }: React.PropsWithChildren<LinkProps>) =>
+		React.cloneElement(React.Children.only(children), { href });
+});
 
 describe('<PostPreview/>', () => {
 	it('should render the <PostPreview/>', () => {
 		const mockedConvertDateTime = mocked(convertDateTime);
 		mockedConvertDateTime.mockReturnValue('23 de dezembro de 2021');
-		render(<PostPreview postContent={post} />);
+
+		render(<Post.PostPreview postContent={post} />);
 
 		expect(screen.getByText('Esse é de DevOps')).toBeInTheDocument();
 		expect(screen.getByText('23 de dezembro de 2021')).toBeInTheDocument();
 
 		const link = screen.getByRole('link');
 		expect(link).toHaveAttribute('href', '/post/esse-e-de-devops');
+
+		//! Still have to figure out why 'createLastSeenPostEntry'is not bee called
+		// const spy = jest
+		// 	.spyOn(Post, 'createLastSeenPostEntry')
+		// 	.mockReturnValue({ slug: 'esse-e-de-devops', name: 'Esse é de DevOps' });
+		// fireEvent.click(link);
+
+		// expect(spy).toHaveBeenCalled();
 	});
 });

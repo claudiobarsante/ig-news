@@ -158,16 +158,20 @@ const Posts = ({ filterItems }) => {
 					</fieldset>
 				</aside>
 				<section className={styles['posts']}>
-					{loading && <img src='/images/dots.svg' alt='Loading more...' />}
+					{data && data.posts.map(post => <PostPreview key={post.id} postContent={post} />)}
+					<div className={styles['loading-container']}>
+						{isToShowButton && (
+							<button className={styles['button']} type='button' onClick={() => handleShowMore()}>
+								Show more posts
+							</button>
+						)}
 
-					{data && data.posts.map(post => <PostPreview postContent={post} />)}
+						{loading && (
+							<img className={styles['loading']} src='/images/dots.svg' alt='Loading more...' />
+						)}
+					</div>
 				</section>
 			</main>
-			{isToShowButton && (
-				<button type='button' onClick={() => handleShowMore()}>
-					Show more
-				</button>
-			)}
 		</>
 	);
 };

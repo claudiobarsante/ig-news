@@ -7,8 +7,9 @@ module.exports = {
 	testEnvironment: 'jsdom',
 	moduleNameMapper: {
 		'\\.(scss|css|sass)$': 'identity-obj-proxy',
-		'src/(.*)': '<rootDir>/src/$1',
+		//'src/(.*)': '<rootDir>/src/$1',
 	},
+	modulePaths: ['<rootDir>/src/'],
 };
 
 /*For jest to understand .css or .scss modules you have to install  yarn add identity-obj-proxy -D */

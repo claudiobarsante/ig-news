@@ -1,6 +1,6 @@
 .container {
 	display: grid;
-	grid-template-rows: 10% 90%;
+	grid-template-rows: auto; //10% 90%;
 	grid-template-areas: 'top top' 'aside posts';
 	grid-template-columns: 20% 80%;
 	gap: 4rem;
@@ -73,6 +73,8 @@
 	}
 }
 .posts {
+	//justify-items: center; // -- aligns items inside the grid horizontaly
+	//align-items: center; // -- aligns items inside the grid vertically
 	grid-area: posts;
 	max-width: 720px;
 	border: 1px solid blue;
@@ -114,4 +116,26 @@
 	color: var(--color-gray-300);
 	margin-top: 0.8rem;
 	line-height: 2.6rem;
+}
+
+.loading-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	margin-top: 3rem;
+}
+.loading {
+	margin-top: 1.5rem;
+	height: 16px;
+	width: 60px;
+	object-fit: fill;
+}
+
+.button {
+	background-color: transparent;
+	border: 0;
+	color: var(--color-yellow-500);
+	letter-spacing: 0.2rem;
 }

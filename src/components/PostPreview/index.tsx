@@ -1,29 +1,45 @@
 import Link from 'next/link';
-import convertDateTime from '../../utils/convertDateTime';
+import { convertDateTime } from 'utils/convertDateTime';
 import styles from 'styles/pages/posts.module.scss';
 import { LoadMorePosts_posts } from 'graphql/generated/LoadMorePosts';
 import { memo } from 'react';
+import { lastSeenVar, PostSeen } from 'graphql/lib/apolloCache';
 
 type Props = {
 	postContent: LoadMorePosts_posts;
 };
+
+export const createLastSeenPostEntry = (postSeen: PostSeen) => {
+	return { slug: postSeen.slug, name: postSeen.name };
+};
+
 const PostPreviewComponent = ({ postContent }: Props) => {
-	const { updatedAt, slug, name, content } = postContent;
 	console.log('postContent', postContent);
+	const { updatedAt, slug, name, content } = postContent;
+
 	const convertedTime = convertDateTime(updatedAt);
 	const formatedContent = `${content.html.slice(0, 300)}...`;
-	return (
-		<Link key={slug} href={`/post/${slug}`}>
-			<a className={styles['post-link']}>
-				<time className={styles['post-link__time']}>{convertedTime}</time>
-				<strong className={styles['post-link__title']}>{name}</strong>
 
-				<div
-					className={styles['post__content']}
-					dangerouslySetInnerHTML={{ __html: formatedContent }}
-				/>
-			</a>
-		</Link>
+	const handleUpdateLastPostsSeen = () => {
+		const lastSeen = lastSeenVar();
+		const newEntry = createLastSeenPostEntry({ slug, name });
+		lastSeenVar(lastSeen.concat([newEntry]));
+	};
+
+	return (
+		<>
+			<Link href={`/post/${slug}`}>
+				<a className={styles['post-link']} onClick={() => handleUpdateLastPostsSeen()}>
+					<time className={styles['post-link__time']}>{convertedTime}</time>
+					<strong className={styles['post-link__title']}>{name}</strong>
+
+					<div
+						className={styles['post__content']}
+						dangerouslySetInnerHTML={{ __html: formatedContent }}
+					/>
+				</a>
+			</Link>
+		</>
 	);
 };
 
