@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { SubscribeButton } from '.';
 import { signIn, useSession } from 'next-auth/client';
-import { mocked } from 'ts-jest/utils'; // -- yarn add ts-jest -D
+import { mocked } from 'jest-mock';
 import { useRouter } from 'next/router';
 // -- check client.d.ts next-auth to see return type of a session
 jest.mock('next-auth/client');

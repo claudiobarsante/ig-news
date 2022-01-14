@@ -1,12 +1,12 @@
 import { ParsedUrlQueryInput } from 'querystring';
-
-type Filter = {
-	name: string;
-	type: string;
-};
+import { FilterItemsTypes } from 'templates/Posts';
+// type Filter = {
+// 	name: string;
+// 	type: string;
+// };
 type ParseArgs = {
 	queryString: ParsedUrlQueryInput;
-	filterItems: Filter[];
+	filterItems: FilterItemsTypes[];
 };
 
 export const parseQueryStringToWhere = ({ queryString, filterItems }: ParseArgs) => {

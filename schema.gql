@@ -66,6 +66,8 @@ directive @mark(
   fieldType: String
   """Specifies WhereUniqueInput type name"""
   whereUniqueInput: String
+  """Specifies ConnectInput type name"""
+  connectInput: String
   """Specifies whether type is connect input"""
   isConnectInput: Boolean
   """Specifies relation input to be for abstract member type, not known master / origin side"""
@@ -96,6 +98,8 @@ directive @mark(
   replaceableWithUserId: Boolean
   """marks if field is required (non-null)"""
   isRequired: Boolean
+  """marks if type is a component"""
+  isComponent: Boolean
 ) on OBJECT | FIELD_DEFINITION | ENUM_VALUE | ENUM | INPUT_FIELD_DEFINITION | INPUT_OBJECT | ARGUMENT_DEFINITION
 
 """"""
@@ -126,6 +130,8 @@ directive @psql(
   memberColumns: [String!]
   """Specifies system updatedAt column"""
   updatedAtColumn: String
+  """Specifies the value used to fill the parent_field column that's used to identify the parent field a component got created for"""
+  componentParentFieldValue: String
 ) on OBJECT | FIELD_DEFINITION | ENUM_VALUE | INPUT_FIELD_DEFINITION | ENUM | INPUT_OBJECT | ARGUMENT_DEFINITION
 
 """"""
