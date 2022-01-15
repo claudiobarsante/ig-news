@@ -4,12 +4,13 @@ import { LOAD_MORE_POSTS_QUERY } from 'graphql/queries';
 import { LoadMorePosts, LoadMorePostsVariables } from 'graphql/generated/LoadMorePosts';
 import { parseQueryStringToWhere } from 'utils/filter';
 import { PostOrderByInput } from '../../graphql/generated/globalTypes';
-import PostsPageTemplate, { DEFAULT_LENGTH, FilterItemsTypes } from 'templates/Posts';
+import PostsPageTemplate, {
+	DEFAULT_LENGTH,
+	FilterItemsTypes,
+	PostsPageProps,
+} from 'templates/Posts';
 
-type PostsProps = {
-	filterItems: FilterItemsTypes[];
-};
-const Posts = ({ filterItems }: PostsProps) => <PostsPageTemplate filterItems={filterItems} />;
+const Posts = ({ filterItems }: PostsPageProps) => <PostsPageTemplate filterItems={filterItems} />;
 
 export default Posts;
 
@@ -24,7 +25,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 
 	const apolloClient = initializeApollo();
 
-	const { data } = await apolloClient.query<LoadMorePosts, LoadMorePostsVariables>({
+	const { data, error } = await apolloClient.query<LoadMorePosts, LoadMorePostsVariables>({
 		query: LOAD_MORE_POSTS_QUERY,
 		variables: {
 			first: DEFAULT_LENGTH,
@@ -33,7 +34,15 @@ export const getServerSideProps: GetServerSideProps = async ({
 			orderBy: PostOrderByInput.publishedAt_DESC,
 		},
 	});
-
+	const errorCode = 'teste';
+	if (error) {
+		return {
+			redirect: {
+				destination: `/error/${errorCode}`,
+				permanent: false,
+			},
+		};
+	}
 	return {
 		props: {
 			initialApolloState: apolloClient.cache.extract(), //initial load to cache

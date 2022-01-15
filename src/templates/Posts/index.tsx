@@ -33,11 +33,11 @@ export type FilterItemsTypes = {
 // 	return totalPosts > currentPosts;
 // }
 
-type PostsPageTemplateProps = {
+export type PostsPageProps = {
 	filterItems: FilterItemsTypes[];
 };
 
-const PostsPageTemplate = ({ filterItems }: PostsPageTemplateProps) => {
+const PostsPageTemplate = ({ filterItems }: PostsPageProps) => {
 	const [radio, setRadio] = useState('publishedAt_DESC');
 	const [categories, setCategories] = useState<Category>({
 		testing: false,
