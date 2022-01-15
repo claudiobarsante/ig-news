@@ -3,7 +3,7 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useSession } from 'next-auth/client';
 import Head from 'next/head';
-import styles from '../../../styles/pages/post.module.scss';
+import styles from 'templates/Posts/posts.module.scss';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';

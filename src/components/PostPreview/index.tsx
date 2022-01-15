@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { convertDateTime } from 'utils/convertDateTime';
-import styles from 'styles/pages/posts.module.scss';
+import styles from 'templates/Posts/posts.module.scss';
 import { LoadMorePosts_posts } from 'graphql/generated/LoadMorePosts';
 import { memo } from 'react';
 import { lastSeenVar, PostSeen } from 'graphql/lib/apolloCache';
@@ -14,7 +14,6 @@ export const createLastSeenPostEntry = (postSeen: PostSeen) => {
 };
 
 const PostPreviewComponent = ({ postContent }: Props) => {
-	console.log('postContent', postContent);
 	const { updatedAt, slug, name, content } = postContent;
 
 	const convertedTime = convertDateTime(updatedAt);

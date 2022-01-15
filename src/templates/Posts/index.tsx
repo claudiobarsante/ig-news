@@ -1,6 +1,6 @@
 import { GetServerSideProps, GetServerSidePropsContext, GetStaticProps } from 'next';
 import Head from 'next/head';
-import styles from 'styles/pages/posts.module.scss';
+import styles from 'templates/Posts/posts.module.scss';
 import Link from 'next/link';
 import { initializeApollo } from 'graphql/lib/apolloClient';
 import { LOAD_MORE_POSTS_QUERY } from 'graphql/queries';

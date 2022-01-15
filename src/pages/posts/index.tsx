@@ -9,8 +9,14 @@ import PostsPageTemplate, {
 	FilterItemsTypes,
 	PostsPageProps,
 } from 'templates/Posts';
+import { useRouter } from 'next/router';
 
-const Posts = ({ filterItems }: PostsPageProps) => <PostsPageTemplate filterItems={filterItems} />;
+const Posts = ({ filterItems }: PostsPageProps) => {
+	const router = useRouter();
+	console.log('router client', router);
+
+	return <PostsPageTemplate filterItems={filterItems} />;
+};
 
 export default Posts;
 
