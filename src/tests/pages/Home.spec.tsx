@@ -1,18 +1,28 @@
 import { render, screen } from '@testing-library/react';
 import Home, { getStaticProps } from '../../pages';
-import { useSession } from 'next-auth/client';
+import { useSession } from 'next-auth/react';
 import { mocked } from 'jest-mock';
 import { stripe } from '../../services/stripe';
 
 jest.mock('next/router');
 // -- check client.d.ts next-auth to see return type of a session
-jest.mock('next-auth/client');
+jest.mock('next-auth/react');
 jest.mock('../../services/stripe');
 
+/** 
+ * useSession() returns an object containing two values: data and status:
+
+data: This can be three values: Session / undefined / null.
+when the session hasn't been fetched yet, data will undefined
+in case it failed to retrieve the session, data will be null
+in case of success, data will be Session.
+status: enum mapping to three possible session states: "loading" | "authenticated" | "unauthenticated"
+*/
 describe('Home page', () => {
 	it('should render the home page', () => {
 		const useSessionMocked = mocked(useSession);
-		useSessionMocked.mockReturnValueOnce([null, false]);
+		useSessionMocked.mockReturnValueOnce({data: null, status:'unauthenticated'});
+	});
 
 		render(<Home product={{ priceId: 'fake-price-id', amount: '$9.99' }} />);
 

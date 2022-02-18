@@ -2,7 +2,8 @@ import { AppProps } from 'next/app';
 import React from 'react';
 import { Header } from '../components/Header';
 import '../styles/global.scss';
-import { Provider as NextAuthProvider } from 'next-auth/client';
+//import { Provider as NextAuthProvider } from 'next-auth/client';
+import { SessionProvider } from 'next-auth/react';
 import { ApolloProvider } from '@apollo/client';
 import { useApollo } from '../graphql/lib/apolloClient';
 import NextNprogress from 'nextjs-progressbar';
@@ -13,7 +14,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 	const apolloClient = useApollo(pageProps.initialApolloState);
 	return (
 		<ApolloProvider client={apolloClient}>
-			<NextAuthProvider session={pageProps.session}>
+			<SessionProvider session={pageProps.session}>
 				<Header />
 				<NextNprogress
 					color='#eba417'
@@ -23,7 +24,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 					showOnShallow={true}
 				/>
 				<Component {...pageProps} />
-			</NextAuthProvider>
+			</SessionProvider>
 		</ApolloProvider>
 	);
 }

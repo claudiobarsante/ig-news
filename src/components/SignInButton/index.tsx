@@ -1,11 +1,12 @@
 import { FaGithub } from 'react-icons/fa';
 import { FiX } from 'react-icons/fi';
 import styles from './styles.module.scss';
-import { signIn, signOut, useSession } from 'next-auth/client';
+import { signIn, signOut, useSession } from 'next-auth/react';
 
 export function SignInButton() {
 	// show if user is logged in
-	const [session] = useSession();
+	//const [session] = useSession();
+	const { data: session } = useSession();
 
 	return session ? (
 		<button type='button' className={styles.signInButton} onClick={() => signOut()}>
