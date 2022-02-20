@@ -13,7 +13,6 @@ import { useRouter } from 'next/router';
 
 const Posts = ({ filterItems }: PostsPageProps) => {
 	const router = useRouter();
-	console.log('router client', router);
 
 	return <PostsPageTemplate filterItems={filterItems} />;
 };

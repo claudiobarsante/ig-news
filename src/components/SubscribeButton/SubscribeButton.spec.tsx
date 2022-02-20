@@ -35,19 +35,16 @@ describe('Subscribe button component', () => {
 
 	it('should redirect to Posts page when user has an active subscription', () => {
 		// -- mocking that the user is signed in
-		const useSessionMocked = mocked(useSession);
-		useSessionMocked.mockReturnValueOnce([
-			{
-				user: {
-					name: 'John Doe',
-					email: 'john.doe@example.com',
-				},
-				activeSubscription: 'fake-active-subscription',
-				expires: 'fake-expires',
+		const data = {
+			user: {
+				name: 'John Doe',
+				email: 'john.doe@example.com',
 			},
-
-			false,
-		]);
+			activeSubscription: 'fake-active-subscription',
+			expires: 'fake-expires',
+		};
+		const useSessionMocked = mocked(useSession);
+		useSessionMocked.mockReturnValueOnce({ data, status: 'authenticated' });
 
 		const useRouterMocked = mocked(useRouter);
 		const pushMock = jest.fn();
@@ -65,22 +62,4 @@ describe('Subscribe button component', () => {
 		expect(pushMock).toHaveBeenCalled();
 		expect(pushMock).toHaveBeenCalledWith('/posts');
 	});
-
-	// it('should renders SignIn button for  authenticated user', () => {
-	// 	const useSessionMocked = mocked(useSession);
-	// 	useSessionMocked.mockReturnValueOnce([
-	// 		{
-	// 			user: {
-	// 				name: 'John Doe',
-	// 				email: 'john.doe@example.com',
-	// 			},
-	// 			expires: 'fake-expires',
-	// 		},
-
-	// 		false,
-	// 	]);
-	// 	render(<SubscribeButton />);
-
-	// 	expect(screen.getByText('John Doe')).toBeInTheDocument();
-	// });
 });

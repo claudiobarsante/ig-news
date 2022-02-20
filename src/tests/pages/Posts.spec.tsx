@@ -1,13 +1,20 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MockedProvider } from '@apollo/client/testing';
-import Posts, { filterItems } from '../../pages/posts';
+import Posts from '../../pages/posts';
 
 import { postMock, postFetchMoreMock } from '../mocks/mocks';
 import apolloCache from '../../graphql/lib/apolloCache';
 
 import { mocked } from 'jest-mock';
 import { checkPostsCount } from '../../utils/checkPostsCount';
+import { FilterItemsTypes } from 'templates/Posts';
+
+const filterItems: FilterItemsTypes[] = [
+	{ name: 'category', type: 'checkbox' },
+	{ name: 'author', type: 'checkbox' },
+	{ name: 'orderBy', type: 'radio' },
+];
 
 jest.mock('next/router', () => ({
 	useRouter() {
