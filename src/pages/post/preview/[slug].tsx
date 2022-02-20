@@ -1,7 +1,7 @@
 /*Here we are creating the post preview */
 
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { useSession } from 'next-auth/client';
+import { useSession } from 'next-auth/react';
 import Head from 'next/head';
 import styles from 'templates/Posts/posts.module.scss';
 import Link from 'next/link';
@@ -19,7 +19,7 @@ type Props = {
 /*dangerouslySetInnerHTML is a way to render content as Html, but you have to be
 aware the if this html has any malicious script could cause problems. Use dangerouslySetInnerHTML with caution */
 export default function PostPreview({ post }: Props) {
-	const [session] = useSession();
+	const { data: session } = useSession();
 	const router = useRouter();
 
 	useEffect(() => {

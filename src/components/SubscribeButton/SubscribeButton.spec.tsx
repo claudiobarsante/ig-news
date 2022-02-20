@@ -1,17 +1,17 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { SubscribeButton } from '.';
-import { signIn, useSession } from 'next-auth/client';
+import { signIn, useSession } from 'next-auth/react';
 import { mocked } from 'jest-mock';
 import { useRouter } from 'next/router';
 // -- check client.d.ts next-auth to see return type of a session
-jest.mock('next-auth/client');
+jest.mock('next-auth/react');
 
 jest.mock('next/router');
 
 describe('Subscribe button component', () => {
 	it('should render Subscribe button with text "Subscribe now"', () => {
 		const useSessionMocked = mocked(useSession);
-		useSessionMocked.mockReturnValueOnce([null, false]); // -- user is not signed in
+		useSessionMocked.mockReturnValueOnce({ data: null, status: 'unauthenticated' }); // -- user is not signed in
 
 		render(<SubscribeButton />);
 
@@ -20,7 +20,7 @@ describe('Subscribe button component', () => {
 
 	it('should redirect user to sign in when not authenticated', () => {
 		const useSessionMocked = mocked(useSession);
-		useSessionMocked.mockReturnValueOnce([null, false]); // -- user is not signed in
+		useSessionMocked.mockReturnValueOnce({ data: null, status: 'unauthenticated' }); // -- user is not signed in
 
 		const signInMocked = mocked(signIn);
 

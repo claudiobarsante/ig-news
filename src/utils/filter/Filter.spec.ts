@@ -1,10 +1,5 @@
+import { FilterItemsTypes } from 'templates/Posts';
 import { parseQueryStringToFilter, parseQueryStringToWhere } from '.';
-import { filterItems } from '../../pages/posts';
-// const filterItems = [
-// 	{ name: 'category', type: 'checkbox' },
-// 	{ name: 'author', type: 'checkbox' },
-// 	{ name: 'orderBy', type: 'radio' },
-// ];
 
 // publishedAt_ASC
 //orderBy: 'publishedAt_ASC',
@@ -14,6 +9,12 @@ const queryString = {
 	author: 'Mark Richards',
 	orderBy: 'publishedAt_ASC',
 };
+
+const filterItems: FilterItemsTypes[] = [
+	{ name: 'category', type: 'checkbox' },
+	{ name: 'author', type: 'checkbox' },
+	{ name: 'orderBy', type: 'radio' },
+];
 
 describe('parseQueryStringToWhere()', () => {
 	it('should parse queryString to where format', () => {

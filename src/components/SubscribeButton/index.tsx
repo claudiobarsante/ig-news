@@ -1,4 +1,4 @@
-import { signIn, useSession } from 'next-auth/client';
+import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { api } from '../../services/api';
 import { getStripeJs } from '../../services/stripe-js';
@@ -14,7 +14,7 @@ getStaticProps(SSG) are only used when the pages is rendering
  * 
 */
 export function SubscribeButton() {
-	const [session] = useSession();
+	const { data: session } = useSession();
 	const router = useRouter();
 
 	// -- the user can only subscribe if it's logged in

@@ -1,15 +1,15 @@
 import { render, screen } from '@testing-library/react';
 import { SignInButton } from '.';
-import { useSession } from 'next-auth/client';
+import { useSession } from 'next-auth/react';
 import { mocked } from 'jest-mock';
 
 // -- check client.d.ts next-auth to see return type of a session
-jest.mock('next-auth/client');
+jest.mock('next-auth/react');
 
 describe('SignIn button component', () => {
 	it('should render SignIn button with text "Sign in with Github" for not authenticated user', () => {
 		const useSessionMocked = mocked(useSession);
-		useSessionMocked.mockReturnValueOnce([null, false]);
+		useSessionMocked.mockReturnValueOnce({ data: null, status: 'unauthenticated' });
 
 		render(<SignInButton />);
 
@@ -19,17 +19,16 @@ describe('SignIn button component', () => {
 	it('should render SignIn button for  authenticated user', () => {
 		// -- mocking that the user is signed in
 		const useSessionMocked = mocked(useSession);
-		useSessionMocked.mockReturnValueOnce([
-			{
+		useSessionMocked.mockReturnValueOnce({
+			data: {
 				user: {
 					name: 'John Doe',
 					email: 'john.doe@example.com',
 				},
 				expires: 'fake-expires',
 			},
-
-			false,
-		]);
+			status: 'authenticated',
+		});
 		render(<SignInButton />);
 
 		expect(screen.getByText('John Doe')).toBeInTheDocument();

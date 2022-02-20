@@ -1,22 +1,25 @@
 import NextAuth from 'next-auth';
-import Providers from 'next-auth/providers';
+//import Providers from 'next-auth/providers';
+import GitHubProvider from 'next-auth/providers/github';
 import { fauna } from '../../../services/fauna';
 import { query as q } from 'faunadb';
 
 export default NextAuth({
 	providers: [
-		Providers.GitHub({
+		GitHubProvider({
 			clientId: process.env.GITHUB_CLIENT_ID,
 			clientSecret: process.env.GITHUB_CLIENT_SECRET,
-			scope: 'read:user', // what info do you want to have access from the user -  more about scope https://docs.github.com/pt/developers/apps/building-oauth-apps/scopes-for-oauth-apps
+			//scope: 'read:user', // what info do you want to have access from the user -  more about scope https://docs.github.com/pt/developers/apps/building-oauth-apps/scopes-for-oauth-apps
 		}),
 	],
+	secret: process.env.NEXTAUTH_SECRET,
+
 	// -- still have to figure out how it'll work on production(it uses HS512) jwt: {
 	// 	signingKey: process.env.SIGN_IN_KEY, // -- SIGN_IN_KEY look on https://next-auth.js.org/warnings option 1 how to generate it
 	// },
 	callbacks: {
 		// -- to modify the content of the session
-		async session(session) {
+		async session({ session }) {
 			try {
 				const userActiveSubscription = await fauna.query(
 					q.Get(
@@ -33,14 +36,14 @@ export default NextAuth({
 						])
 					)
 				);
-				
+
 				return { ...session, activeSubscription: userActiveSubscription };
 			} catch {
 				return { ...session, activeSubscription: null };
 			}
 		},
 		//--
-		async signIn(user, account, profile) {
+		async signIn({ user, account, profile }) {
 			const { email } = user;
 			// -- if signIn was successful return true otherwise return false
 			try {

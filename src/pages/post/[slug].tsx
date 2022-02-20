@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { getSession } from 'next-auth/client';
+import { getSession } from 'next-auth/react';
 import Head from 'next/head';
 import styles from './../../styles/pages/post.module.scss';
 import { GET_POST_BY_SLUG_QUERY } from '../../graphql/queries';
@@ -75,7 +75,8 @@ export default function Post({ post }: Props) {
  * users. To see all the post content the user needs to be logged in and have a active subscription
  */
 export const getServerSideProps: GetServerSideProps = async ({ req, params }) => {
-	const session = await getSession({ req }); // with getSession() you could check the cookies if the user is logged in
+	const session = await getSession({ req });
+	console.log('vsession-getServerSideProps', session); // with getSession() you could check the cookies if the user is logged in
 	const { slug } = params;
 	/** If user don't have an active subscription will be redirecto the home page */
 	if (!session?.activeSubscription) {

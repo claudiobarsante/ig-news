@@ -12,10 +12,10 @@ jest.mock('next/router', () => {
 });
 
 // -- check client.d.ts next-auth to see return type of a session
-jest.mock('next-auth/client', () => {
+jest.mock('next-auth/react', () => {
 	return {
 		useSession() {
-			return [null, false];
+			return { data: null, status: 'unauthenticated' };
 		},
 	};
 });

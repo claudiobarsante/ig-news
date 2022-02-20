@@ -21,9 +21,7 @@ status: enum mapping to three possible session states: "loading" | "authenticate
 describe('Home page', () => {
 	it('should render the home page', () => {
 		const useSessionMocked = mocked(useSession);
-		useSessionMocked.mockReturnValueOnce({data: null, status:'unauthenticated'});
-	});
-
+		useSessionMocked.mockReturnValueOnce({ data: null, status: 'unauthenticated' });
 		render(<Home product={{ priceId: 'fake-price-id', amount: '$9.99' }} />);
 
 		expect(screen.getByText('for $9.99 month')).toBeInTheDocument();
