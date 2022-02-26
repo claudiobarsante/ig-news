@@ -1,14 +1,17 @@
+import { mocked } from 'jest-mock';
+import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MockedProvider } from '@apollo/client/testing';
-import Posts from '../../pages/posts';
-
-import { postMock, postFetchMoreMock } from './mocks';
+// -- Graphql
 import apolloCache from '../../graphql/lib/apolloCache';
-
-import { mocked } from 'jest-mock';
-import { checkPostsCount } from '../../utils/checkPostsCount';
+// -- components
+import Posts from '../../pages/posts';
+// -- types
 import { FilterItemsTypes } from 'templates/Posts/types';
+// -- Utils
+import { checkPostsCount } from '../../utils/checkPostsCount';
+// -- mocks
+import { postMock, postFetchMoreMock, categoriesMock, filtersMock } from './mocks';
 
 const filterItems: FilterItemsTypes[] = [
 	{ name: 'category', type: 'checkbox' },
@@ -50,7 +53,11 @@ describe('Apollo', () => {
 
 		render(
 			<MockedProvider mocks={[postMock]}>
-				<Posts filterItems={filterItems} />
+				<Posts
+					filterItems={filterItems}
+					postsCategories={categoriesMock}
+					postsFilters={filtersMock}
+				/>
 			</MockedProvider>
 		);
 		await waitFor(() => expect(screen.getByRole('button', { name: /show more/i })));
@@ -62,7 +69,11 @@ describe('Apollo', () => {
 	it('should render more posts', async () => {
 		render(
 			<MockedProvider mocks={[postMock, postFetchMoreMock]} cache={apolloCache}>
-				<Posts filterItems={filterItems} />
+				<Posts
+					filterItems={filterItems}
+					postsCategories={categoriesMock}
+					postsFilters={filtersMock}
+				/>
 			</MockedProvider>
 		);
 
@@ -82,7 +93,11 @@ describe('Apollo', () => {
 		mockedCheckPostsCountFunction.mockReturnValue(false);
 		render(
 			<MockedProvider mocks={[postMock, postFetchMoreMock]} cache={apolloCache}>
-				<Posts filterItems={filterItems} />
+				<Posts
+					filterItems={filterItems}
+					postsCategories={categoriesMock}
+					postsFilters={filtersMock}
+				/>
 			</MockedProvider>
 		);
 

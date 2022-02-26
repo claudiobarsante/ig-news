@@ -51,6 +51,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 			},
 		};
 	}
+
 	return {
 		props: {
 			initialApolloState: apolloClient.cache.extract(), //initial load to cache

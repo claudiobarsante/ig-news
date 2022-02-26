@@ -3,7 +3,7 @@ import styles from 'templates/Posts/posts.module.scss';
 
 type CheckboxProps = {
 	name: string;
-	onCheck: (event: React.ChangeEvent<HTMLInputElement>) => void;
+	onCheck: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	isChecked: boolean;
 	label: string;
 	labelFor: string;

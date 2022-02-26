@@ -1,3 +1,7 @@
+import {
+	QueryPostsPage_categories,
+	QueryPostsPage_filters,
+} from 'graphql/generated/QueryPostsPage';
 import { PostOrderByInput } from '../../graphql/generated/globalTypes';
 import { LOAD_MORE_POSTS_QUERY } from '../../graphql/queries';
 
@@ -63,7 +67,7 @@ export const postFetchMoreMock = {
 	}),
 };
 
-export const categoriesMock = [
+export const categoriesMock: QueryPostsPage_categories[] = [
 	{
 		__typename: 'Category',
 		id: 'ckxi3ghcg5a5f0e82mlg4ymvl',
@@ -87,13 +91,14 @@ export const categoriesMock = [
 	},
 ];
 
-export const filtersMock = [
+export const filtersMock: QueryPostsPage_filters[] = [
 	{
 		__typename: 'Filter',
 		id: 'cl03xm53jjhhc0goh3v866rds',
 		label: 'Newest first',
 		name: 'postsOrderBy',
 		value: 'publishedAt_ASC',
+		formType: 'radio',
 	},
 	{
 		__typename: 'Filter',
@@ -101,9 +106,9 @@ export const filtersMock = [
 		label: 'Oldest first',
 		name: 'postsOrderBy',
 		value: 'publishedAt_DESC',
+		formType: 'radio',
 	},
 ];
-
 export const allPosts = [
 	{
 		__typename: 'Post',
