@@ -3,7 +3,7 @@ import Head from 'next/head';
 import styles from 'templates/Posts/posts.module.scss';
 import Link from 'next/link';
 import { initializeApollo } from 'graphql/lib/apolloClient';
-import { LOAD_MORE_POSTS_QUERY } from 'graphql/queries';
+import { LOAD_MORE_POSTS_QUERY, QUERY_POSTS_PAGE } from 'graphql/queries';
 import { useQuery } from '@apollo/client';
 import { LoadMorePosts, LoadMorePostsVariables } from 'graphql/generated/LoadMorePosts';
 import { convertDateTime } from 'utils/convertDateTime';
@@ -14,6 +14,12 @@ import { ParsedUrlQuery, ParsedUrlQueryInput } from 'querystring';
 import { useRouter } from 'next/router';
 import { checkPostsCount } from 'utils/checkPostsCount';
 import { PostPreview } from 'components/PostPreview';
+import { useApolloClient } from '@apollo/client';
+import {
+	QueryPostsPage_categories,
+	QueryPostsPage_filters,
+} from 'graphql/generated/QueryPostsPage';
+import CheckBox from 'components/Checkbox';
 
 export const DEFAULT_LENGTH = 3;
 
@@ -35,14 +41,13 @@ export type FilterItemsTypes = {
 
 export type PostsPageProps = {
 	filterItems: FilterItemsTypes[];
+	postsCategories: QueryPostsPage_categories[];
+	postsFilters: QueryPostsPage_filters[];
 };
 
-const PostsPageTemplate = ({ filterItems }: PostsPageProps) => {
+const PostsPageTemplate = ({ filterItems, postsCategories, postsFilters }: PostsPageProps) => {
 	const [radio, setRadio] = useState('publishedAt_DESC');
-	const [categories, setCategories] = useState<Category>({
-		testing: false,
-		programming: false,
-	});
+	const [categories, setCategories] = useState<Category>({});
 
 	const { push, query, pathname } = useRouter();
 
@@ -59,6 +64,12 @@ const PostsPageTemplate = ({ filterItems }: PostsPageProps) => {
 			},
 		}
 	);
+
+	useEffect(() => {
+		let temp = {};
+		Object.keys(postsCategories).forEach(key => (temp[key] = false));
+		setCategories(temp);
+	}, []);
 
 	useEffect(() => {
 		updateQueryResuts();
@@ -98,8 +109,7 @@ const PostsPageTemplate = ({ filterItems }: PostsPageProps) => {
 	};
 
 	const handleCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const updated = { ...categories, [e.target.name]: e.target.checked };
-		setCategories(updated);
+		setCategories(categories => ({ ...categories, [e.target.name]: e.target.checked }));
 	};
 
 	const isToShowButton = checkPostsCount(data?.postsConnection.aggregate.count, data?.posts.length);
@@ -114,24 +124,16 @@ const PostsPageTemplate = ({ filterItems }: PostsPageProps) => {
 				<aside className={styles['aside']}>
 					<fieldset className={styles['filters']}>
 						<h3>Categories</h3>
-						<label className={styles['checkbox-item']}>
-							<input
-								type='checkbox'
-								name='testing'
-								onChange={handleCheck}
-								checked={categories.testing}
-							/>
-							<span>Testingdf gdgdf gdfgdfgdfgdfg</span>
-						</label>
-						<label className={styles['checkbox-item']}>
-							<input
-								type='checkbox'
-								name='programming'
-								onChange={handleCheck}
-								checked={categories.programming}
-							/>
-							<span>Programming</span>
-						</label>
+						{postsCategories &&
+							postsCategories.map(category => (
+								<CheckBox
+									key={category.id}
+									name={category.name}
+									onChange={handleCheck}
+									isChecked={categories[category.name]}
+									label={category.label}
+								/>
+							))}
 
 						<div className={styles['orderBy']}>
 							<h3>Order by</h3>

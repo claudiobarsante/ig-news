@@ -53,3 +53,63 @@ export const LOAD_MORE_POSTS_QUERY = gql`
 		}
 	}
 `;
+
+export const GET_ALL_FILTERS = gql`
+	query GetAllFilters {
+		filters {
+			id
+			label
+			name
+			value
+			formType
+		}
+	}
+`;
+
+export const GET_ALL_CATEGORIES = gql`
+	query GetAllCategories {
+		categories {
+			id
+			label
+			name
+			formType
+		}
+	}
+`;
+
+export const QUERY_POSTS_PAGE = gql`
+	query QueryPostsPage(
+		$first: Int!
+		$skip: Int!
+		$where: PostWhereInput
+		$orderBy: PostOrderByInput
+	) {
+		posts(first: $first, skip: $skip, where: $where, orderBy: $orderBy) {
+			id
+			updatedAt
+			slug
+			name
+			content {
+				html
+			}
+		}
+		postsConnection(orderBy: $orderBy, where: $where) {
+			aggregate {
+				count
+			}
+		}
+		categories {
+			id
+			label
+			name
+			formType
+		}
+		filters {
+			id
+			label
+			name
+			value
+			formType
+		}
+	}
+`;

@@ -1,6 +1,6 @@
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { initializeApollo } from 'graphql/lib/apolloClient';
-import { LOAD_MORE_POSTS_QUERY } from 'graphql/queries';
+import { LOAD_MORE_POSTS_QUERY, QUERY_POSTS_PAGE } from 'graphql/queries';
 import { LoadMorePosts, LoadMorePostsVariables } from 'graphql/generated/LoadMorePosts';
 import { parseQueryStringToWhere } from 'utils/filter';
 import { PostOrderByInput } from '../../graphql/generated/globalTypes';
@@ -9,13 +9,15 @@ import PostsPageTemplate, {
 	FilterItemsTypes,
 	PostsPageProps,
 } from 'templates/Posts';
-import { useRouter } from 'next/router';
+import { QueryPostsPage, QueryPostsPageVariables } from 'graphql/generated/QueryPostsPage';
 
-const Posts = ({ filterItems }: PostsPageProps) => {
-	const router = useRouter();
-
-	return <PostsPageTemplate filterItems={filterItems} />;
-};
+const Posts = ({ filterItems, postsCategories, postsFilters }: PostsPageProps) => (
+	<PostsPageTemplate
+		filterItems={filterItems}
+		postsCategories={postsCategories}
+		postsFilters={postsFilters}
+	/>
+);
 
 export default Posts;
 
@@ -30,8 +32,8 @@ export const getServerSideProps: GetServerSideProps = async ({
 
 	const apolloClient = initializeApollo();
 
-	const { data, error } = await apolloClient.query<LoadMorePosts, LoadMorePostsVariables>({
-		query: LOAD_MORE_POSTS_QUERY,
+	const { data, error } = await apolloClient.query<QueryPostsPage, QueryPostsPageVariables>({
+		query: QUERY_POSTS_PAGE,
 		variables: {
 			first: DEFAULT_LENGTH,
 			skip: 0,
@@ -39,6 +41,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 			orderBy: PostOrderByInput.publishedAt_DESC,
 		},
 	});
+
 	const errorCode = 'teste';
 	if (error) {
 		return {
@@ -52,6 +55,8 @@ export const getServerSideProps: GetServerSideProps = async ({
 		props: {
 			initialApolloState: apolloClient.cache.extract(), //initial load to cache
 			filterItems: FILTER_ITEMS,
+			postsCategories: data.categories,
+			postsFilters: data.filters,
 		},
 	};
 };

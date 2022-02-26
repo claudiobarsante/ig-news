@@ -117,11 +117,11 @@ directive @psql(
   """postgres localization table name"""
   localizationTable: String
   """postgres column name"""
-  column: [String!]
+  column: String
   """hardcoded postgres id value for enums"""
   id: String
   """postgres join on name"""
-  join: [String!]
+  join: String
   """Specifies column for system id field"""
   idColumn: String
   """Specifies column for native sorting for relational fields"""
@@ -1482,6 +1482,10 @@ type Category implements Node {
   publishedAt: DateTime
   """"""
   name: String
+  """"""
+  label: String
+  """"""
+  formType: String
   """User that created this document"""
   createdBy(
     """
@@ -1605,6 +1609,10 @@ input CategoryCreateInput {
   updatedAt: DateTime
   """"""
   name: String
+  """"""
+  label: String
+  """"""
+  formType: String
   """"""
   post: PostCreateManyInlineInput
 }
@@ -1732,6 +1740,46 @@ input CategoryManyWhereInput {
   """All values not ending with the given string"""
   name_not_ends_with: String
   """"""
+  label: String
+  """All values that are not equal to given value."""
+  label_not: String
+  """All values that are contained in given list."""
+  label_in: [String!]
+  """All values that are not contained in given list."""
+  label_not_in: [String!]
+  """All values containing the given string."""
+  label_contains: String
+  """All values not containing the given string."""
+  label_not_contains: String
+  """All values starting with the given string."""
+  label_starts_with: String
+  """All values not starting with the given string."""
+  label_not_starts_with: String
+  """All values ending with the given string."""
+  label_ends_with: String
+  """All values not ending with the given string"""
+  label_not_ends_with: String
+  """"""
+  formType: String
+  """All values that are not equal to given value."""
+  formType_not: String
+  """All values that are contained in given list."""
+  formType_in: [String!]
+  """All values that are not contained in given list."""
+  formType_not_in: [String!]
+  """All values containing the given string."""
+  formType_contains: String
+  """All values not containing the given string."""
+  formType_not_contains: String
+  """All values starting with the given string."""
+  formType_starts_with: String
+  """All values not starting with the given string."""
+  formType_not_starts_with: String
+  """All values ending with the given string."""
+  formType_ends_with: String
+  """All values not ending with the given string"""
+  formType_not_ends_with: String
+  """"""
   createdBy: UserWhereInput
   """"""
   updatedBy: UserWhereInput
@@ -1773,12 +1821,24 @@ enum CategoryOrderByInput {
   name_ASC
   """"""
   name_DESC
+  """"""
+  label_ASC
+  """"""
+  label_DESC
+  """"""
+  formType_ASC
+  """"""
+  formType_DESC
 }
 
 """"""
 input CategoryUpdateInput {
   """"""
   name: String
+  """"""
+  label: String
+  """"""
+  formType: String
   """"""
   post: PostUpdateManyInlineInput
 }
@@ -1803,8 +1863,8 @@ input CategoryUpdateManyInlineInput {
 
 """"""
 input CategoryUpdateManyInput {
-  """No fields in updateMany data input"""
-  _: String
+  """"""
+  formType: String
 }
 
 """"""
@@ -1954,6 +2014,46 @@ input CategoryWhereInput {
   """All values not ending with the given string"""
   name_not_ends_with: String
   """"""
+  label: String
+  """All values that are not equal to given value."""
+  label_not: String
+  """All values that are contained in given list."""
+  label_in: [String!]
+  """All values that are not contained in given list."""
+  label_not_in: [String!]
+  """All values containing the given string."""
+  label_contains: String
+  """All values not containing the given string."""
+  label_not_contains: String
+  """All values starting with the given string."""
+  label_starts_with: String
+  """All values not starting with the given string."""
+  label_not_starts_with: String
+  """All values ending with the given string."""
+  label_ends_with: String
+  """All values not ending with the given string"""
+  label_not_ends_with: String
+  """"""
+  formType: String
+  """All values that are not equal to given value."""
+  formType_not: String
+  """All values that are contained in given list."""
+  formType_in: [String!]
+  """All values that are not contained in given list."""
+  formType_not_in: [String!]
+  """All values containing the given string."""
+  formType_contains: String
+  """All values not containing the given string."""
+  formType_not_contains: String
+  """All values starting with the given string."""
+  formType_starts_with: String
+  """All values not starting with the given string."""
+  formType_not_starts_with: String
+  """All values ending with the given string."""
+  formType_ends_with: String
+  """All values not ending with the given string"""
+  formType_not_ends_with: String
+  """"""
   createdBy: UserWhereInput
   """"""
   updatedBy: UserWhereInput
@@ -1979,6 +2079,8 @@ input CategoryWhereUniqueInput {
   id: ID
   """"""
   name: String
+  """"""
+  label: String
 }
 
 """Representing a color value comprising of HEX, RGBA and css color values"""
@@ -2105,6 +2207,648 @@ type DocumentVersion {
 }
 
 """"""
+type Filter implements Node {
+  """System stage field"""
+  stage: Stage!
+  """Get the document in other stages"""
+  documentInStages(
+    """Potential stages that should be returned"""
+    stages: [Stage!]! = [DRAFT, PUBLISHED]
+    """Decides if the current stage should be included or not"""
+    includeCurrent: Boolean! = false
+    """Decides if the documents should match the parent documents locale or should use the fallback order defined in the tree"""
+    inheritLocale: Boolean! = false
+  ): [Filter!]!
+  """The unique identifier"""
+  id: ID!
+  """The time the document was created"""
+  createdAt: DateTime!
+  """The time the document was updated"""
+  updatedAt: DateTime!
+  """The time the document was published. Null on documents in draft stage."""
+  publishedAt: DateTime
+  """"""
+  label: String!
+  """"""
+  name: String!
+  """"""
+  value: String!
+  """"""
+  formType: String
+  """User that created this document"""
+  createdBy(
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `createdBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): User
+  """User that last updated this document"""
+  updatedBy(
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `updatedBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): User
+  """User that last published this document"""
+  publishedBy(
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `publishedBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): User
+  """"""
+  scheduledIn(
+    """"""
+    where: ScheduledOperationWhereInput
+    """"""
+    skip: Int
+    """"""
+    after: String
+    """"""
+    before: String
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `scheduledIn` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): [ScheduledOperation!]!
+  """List of Filter versions"""
+  history(
+    """"""
+    limit: Int! = 10
+    """"""
+    skip: Int! = 0
+    """This is optional and can be used to fetch the document version history for a specific stage instead of the current one"""
+    stageOverride: Stage
+  ): [Version!]!
+}
+
+""""""
+input FilterConnectInput {
+  """Document to connect"""
+  where: FilterWhereUniqueInput!
+  """Allow to specify document position in list of connected documents, will default to appending at end of list"""
+  position: ConnectPositionInput
+}
+
+"""A connection to a list of items."""
+type FilterConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+  """A list of edges."""
+  edges: [FilterEdge!]!
+  """"""
+  aggregate: Aggregate!
+}
+
+""""""
+input FilterCreateInput {
+  """"""
+  createdAt: DateTime
+  """"""
+  updatedAt: DateTime
+  """"""
+  label: String!
+  """"""
+  name: String!
+  """"""
+  value: String!
+  """"""
+  formType: String
+}
+
+""""""
+input FilterCreateManyInlineInput {
+  """Create and connect multiple existing Filter documents"""
+  create: [FilterCreateInput!]
+  """Connect multiple existing Filter documents"""
+  connect: [FilterWhereUniqueInput!]
+}
+
+""""""
+input FilterCreateOneInlineInput {
+  """Create and connect one Filter document"""
+  create: FilterCreateInput
+  """Connect one existing Filter document"""
+  connect: FilterWhereUniqueInput
+}
+
+"""An edge in a connection."""
+type FilterEdge {
+  """The item at the end of the edge."""
+  node: Filter!
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+"""Identifies documents"""
+input FilterManyWhereInput {
+  """Contains search across all appropriate fields."""
+  _search: String
+  """Logical AND on all given filters."""
+  AND: [FilterWhereInput!]
+  """Logical OR on all given filters."""
+  OR: [FilterWhereInput!]
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [FilterWhereInput!]
+  """"""
+  id: ID
+  """All values that are not equal to given value."""
+  id_not: ID
+  """All values that are contained in given list."""
+  id_in: [ID!]
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+  """All values containing the given string."""
+  id_contains: ID
+  """All values not containing the given string."""
+  id_not_contains: ID
+  """All values starting with the given string."""
+  id_starts_with: ID
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+  """All values ending with the given string."""
+  id_ends_with: ID
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+  """"""
+  createdAt: DateTime
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  """"""
+  updatedAt: DateTime
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  """"""
+  publishedAt: DateTime
+  """All values that are not equal to given value."""
+  publishedAt_not: DateTime
+  """All values that are contained in given list."""
+  publishedAt_in: [DateTime!]
+  """All values that are not contained in given list."""
+  publishedAt_not_in: [DateTime!]
+  """All values less than the given value."""
+  publishedAt_lt: DateTime
+  """All values less than or equal the given value."""
+  publishedAt_lte: DateTime
+  """All values greater than the given value."""
+  publishedAt_gt: DateTime
+  """All values greater than or equal the given value."""
+  publishedAt_gte: DateTime
+  """"""
+  label: String
+  """All values that are not equal to given value."""
+  label_not: String
+  """All values that are contained in given list."""
+  label_in: [String!]
+  """All values that are not contained in given list."""
+  label_not_in: [String!]
+  """All values containing the given string."""
+  label_contains: String
+  """All values not containing the given string."""
+  label_not_contains: String
+  """All values starting with the given string."""
+  label_starts_with: String
+  """All values not starting with the given string."""
+  label_not_starts_with: String
+  """All values ending with the given string."""
+  label_ends_with: String
+  """All values not ending with the given string"""
+  label_not_ends_with: String
+  """"""
+  name: String
+  """All values that are not equal to given value."""
+  name_not: String
+  """All values that are contained in given list."""
+  name_in: [String!]
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+  """All values containing the given string."""
+  name_contains: String
+  """All values not containing the given string."""
+  name_not_contains: String
+  """All values starting with the given string."""
+  name_starts_with: String
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+  """All values ending with the given string."""
+  name_ends_with: String
+  """All values not ending with the given string"""
+  name_not_ends_with: String
+  """"""
+  value: String
+  """All values that are not equal to given value."""
+  value_not: String
+  """All values that are contained in given list."""
+  value_in: [String!]
+  """All values that are not contained in given list."""
+  value_not_in: [String!]
+  """All values containing the given string."""
+  value_contains: String
+  """All values not containing the given string."""
+  value_not_contains: String
+  """All values starting with the given string."""
+  value_starts_with: String
+  """All values not starting with the given string."""
+  value_not_starts_with: String
+  """All values ending with the given string."""
+  value_ends_with: String
+  """All values not ending with the given string"""
+  value_not_ends_with: String
+  """"""
+  formType: String
+  """All values that are not equal to given value."""
+  formType_not: String
+  """All values that are contained in given list."""
+  formType_in: [String!]
+  """All values that are not contained in given list."""
+  formType_not_in: [String!]
+  """All values containing the given string."""
+  formType_contains: String
+  """All values not containing the given string."""
+  formType_not_contains: String
+  """All values starting with the given string."""
+  formType_starts_with: String
+  """All values not starting with the given string."""
+  formType_not_starts_with: String
+  """All values ending with the given string."""
+  formType_ends_with: String
+  """All values not ending with the given string"""
+  formType_not_ends_with: String
+  """"""
+  createdBy: UserWhereInput
+  """"""
+  updatedBy: UserWhereInput
+  """"""
+  publishedBy: UserWhereInput
+  """"""
+  scheduledIn_every: ScheduledOperationWhereInput
+  """"""
+  scheduledIn_some: ScheduledOperationWhereInput
+  """"""
+  scheduledIn_none: ScheduledOperationWhereInput
+}
+
+""""""
+enum FilterOrderByInput {
+  """"""
+  id_ASC
+  """"""
+  id_DESC
+  """"""
+  createdAt_ASC
+  """"""
+  createdAt_DESC
+  """"""
+  updatedAt_ASC
+  """"""
+  updatedAt_DESC
+  """"""
+  publishedAt_ASC
+  """"""
+  publishedAt_DESC
+  """"""
+  label_ASC
+  """"""
+  label_DESC
+  """"""
+  name_ASC
+  """"""
+  name_DESC
+  """"""
+  value_ASC
+  """"""
+  value_DESC
+  """"""
+  formType_ASC
+  """"""
+  formType_DESC
+}
+
+""""""
+input FilterUpdateInput {
+  """"""
+  label: String
+  """"""
+  name: String
+  """"""
+  value: String
+  """"""
+  formType: String
+}
+
+""""""
+input FilterUpdateManyInlineInput {
+  """Create and connect multiple Filter documents"""
+  create: [FilterCreateInput!]
+  """Connect multiple existing Filter documents"""
+  connect: [FilterConnectInput!]
+  """Override currently-connected documents with multiple existing Filter documents"""
+  set: [FilterWhereUniqueInput!]
+  """Update multiple Filter documents"""
+  update: [FilterUpdateWithNestedWhereUniqueInput!]
+  """Upsert multiple Filter documents"""
+  upsert: [FilterUpsertWithNestedWhereUniqueInput!]
+  """Disconnect multiple Filter documents"""
+  disconnect: [FilterWhereUniqueInput!]
+  """Delete multiple Filter documents"""
+  delete: [FilterWhereUniqueInput!]
+}
+
+""""""
+input FilterUpdateManyInput {
+  """"""
+  name: String
+  """"""
+  formType: String
+}
+
+""""""
+input FilterUpdateManyWithNestedWhereInput {
+  """Document search"""
+  where: FilterWhereInput!
+  """Update many input"""
+  data: FilterUpdateManyInput!
+}
+
+""""""
+input FilterUpdateOneInlineInput {
+  """Create and connect one Filter document"""
+  create: FilterCreateInput
+  """Update single Filter document"""
+  update: FilterUpdateWithNestedWhereUniqueInput
+  """Upsert single Filter document"""
+  upsert: FilterUpsertWithNestedWhereUniqueInput
+  """Connect existing Filter document"""
+  connect: FilterWhereUniqueInput
+  """Disconnect currently connected Filter document"""
+  disconnect: Boolean
+  """Delete currently connected Filter document"""
+  delete: Boolean
+}
+
+""""""
+input FilterUpdateWithNestedWhereUniqueInput {
+  """Unique document search"""
+  where: FilterWhereUniqueInput!
+  """Document to update"""
+  data: FilterUpdateInput!
+}
+
+""""""
+input FilterUpsertInput {
+  """Create document if it didn't exist"""
+  create: FilterCreateInput!
+  """Update document if it exists"""
+  update: FilterUpdateInput!
+}
+
+""""""
+input FilterUpsertWithNestedWhereUniqueInput {
+  """Unique document search"""
+  where: FilterWhereUniqueInput!
+  """Upsert data"""
+  data: FilterUpsertInput!
+}
+
+"""Identifies documents"""
+input FilterWhereInput {
+  """Contains search across all appropriate fields."""
+  _search: String
+  """Logical AND on all given filters."""
+  AND: [FilterWhereInput!]
+  """Logical OR on all given filters."""
+  OR: [FilterWhereInput!]
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [FilterWhereInput!]
+  """"""
+  id: ID
+  """All values that are not equal to given value."""
+  id_not: ID
+  """All values that are contained in given list."""
+  id_in: [ID!]
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+  """All values containing the given string."""
+  id_contains: ID
+  """All values not containing the given string."""
+  id_not_contains: ID
+  """All values starting with the given string."""
+  id_starts_with: ID
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+  """All values ending with the given string."""
+  id_ends_with: ID
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+  """"""
+  createdAt: DateTime
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  """"""
+  updatedAt: DateTime
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  """"""
+  publishedAt: DateTime
+  """All values that are not equal to given value."""
+  publishedAt_not: DateTime
+  """All values that are contained in given list."""
+  publishedAt_in: [DateTime!]
+  """All values that are not contained in given list."""
+  publishedAt_not_in: [DateTime!]
+  """All values less than the given value."""
+  publishedAt_lt: DateTime
+  """All values less than or equal the given value."""
+  publishedAt_lte: DateTime
+  """All values greater than the given value."""
+  publishedAt_gt: DateTime
+  """All values greater than or equal the given value."""
+  publishedAt_gte: DateTime
+  """"""
+  label: String
+  """All values that are not equal to given value."""
+  label_not: String
+  """All values that are contained in given list."""
+  label_in: [String!]
+  """All values that are not contained in given list."""
+  label_not_in: [String!]
+  """All values containing the given string."""
+  label_contains: String
+  """All values not containing the given string."""
+  label_not_contains: String
+  """All values starting with the given string."""
+  label_starts_with: String
+  """All values not starting with the given string."""
+  label_not_starts_with: String
+  """All values ending with the given string."""
+  label_ends_with: String
+  """All values not ending with the given string"""
+  label_not_ends_with: String
+  """"""
+  name: String
+  """All values that are not equal to given value."""
+  name_not: String
+  """All values that are contained in given list."""
+  name_in: [String!]
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+  """All values containing the given string."""
+  name_contains: String
+  """All values not containing the given string."""
+  name_not_contains: String
+  """All values starting with the given string."""
+  name_starts_with: String
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+  """All values ending with the given string."""
+  name_ends_with: String
+  """All values not ending with the given string"""
+  name_not_ends_with: String
+  """"""
+  value: String
+  """All values that are not equal to given value."""
+  value_not: String
+  """All values that are contained in given list."""
+  value_in: [String!]
+  """All values that are not contained in given list."""
+  value_not_in: [String!]
+  """All values containing the given string."""
+  value_contains: String
+  """All values not containing the given string."""
+  value_not_contains: String
+  """All values starting with the given string."""
+  value_starts_with: String
+  """All values not starting with the given string."""
+  value_not_starts_with: String
+  """All values ending with the given string."""
+  value_ends_with: String
+  """All values not ending with the given string"""
+  value_not_ends_with: String
+  """"""
+  formType: String
+  """All values that are not equal to given value."""
+  formType_not: String
+  """All values that are contained in given list."""
+  formType_in: [String!]
+  """All values that are not contained in given list."""
+  formType_not_in: [String!]
+  """All values containing the given string."""
+  formType_contains: String
+  """All values not containing the given string."""
+  formType_not_contains: String
+  """All values starting with the given string."""
+  formType_starts_with: String
+  """All values not starting with the given string."""
+  formType_not_starts_with: String
+  """All values ending with the given string."""
+  formType_ends_with: String
+  """All values not ending with the given string"""
+  formType_not_ends_with: String
+  """"""
+  createdBy: UserWhereInput
+  """"""
+  updatedBy: UserWhereInput
+  """"""
+  publishedBy: UserWhereInput
+  """"""
+  scheduledIn_every: ScheduledOperationWhereInput
+  """"""
+  scheduledIn_some: ScheduledOperationWhereInput
+  """"""
+  scheduledIn_none: ScheduledOperationWhereInput
+}
+
+"""References Filter record uniquely"""
+input FilterWhereUniqueInput {
+  """"""
+  id: ID
+  """"""
+  label: String
+  """"""
+  value: String
+}
+
+""""""
+enum FormFilters {
+  """"""
+  checkbox
+  """"""
+  radio
+}
+
+""""""
 scalar Hex
 
 """"""
@@ -2167,6 +2911,149 @@ scalar Long
 
 """"""
 type Mutation {
+  """Create one filter"""
+  createFilter(data: FilterCreateInput!): Filter
+  """Update one filter"""
+  updateFilter(where: FilterWhereUniqueInput!, data: FilterUpdateInput!): Filter
+  """Delete one filter from _all_ existing stages. Returns deleted document."""
+  deleteFilter(
+    """Document to delete"""
+    where: FilterWhereUniqueInput!
+  ): Filter
+  """Upsert one filter"""
+  upsertFilter(where: FilterWhereUniqueInput!, upsert: FilterUpsertInput!): Filter
+  """Publish one filter"""
+  publishFilter(
+    """Document to publish"""
+    where: FilterWhereUniqueInput!
+    """Publishing target stage"""
+    to: [Stage!]! = [PUBLISHED]
+  ): Filter
+  """Unpublish one filter from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only."""
+  unpublishFilter(
+    """Document to unpublish"""
+    where: FilterWhereUniqueInput!
+    """Stages to unpublish document from"""
+    from: [Stage!]! = [PUBLISHED]
+  ): Filter
+  """Update many Filter documents"""
+  updateManyFiltersConnection(
+    """Documents to apply update on"""
+    where: FilterManyWhereInput
+    """Updates to document content"""
+    data: FilterUpdateManyInput!
+    """"""
+    skip: Int
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """"""
+    before: ID
+    """"""
+    after: ID
+  ): FilterConnection!
+  """Delete many Filter documents, return deleted documents"""
+  deleteManyFiltersConnection(
+    """Documents to delete"""
+    where: FilterManyWhereInput
+    """"""
+    skip: Int
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """"""
+    before: ID
+    """"""
+    after: ID
+  ): FilterConnection!
+  """Publish many Filter documents"""
+  publishManyFiltersConnection(
+    """Identifies documents in each stage to be published"""
+    where: FilterManyWhereInput
+    """Stage to find matching documents in"""
+    from: Stage = DRAFT
+    """Stages to publish documents to"""
+    to: [Stage!]! = [PUBLISHED]
+    """"""
+    skip: Int
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """"""
+    before: ID
+    """"""
+    after: ID
+  ): FilterConnection!
+  """Find many Filter documents that match criteria in specified stage and unpublish from target stages"""
+  unpublishManyFiltersConnection(
+    """Identifies documents in draft stage"""
+    where: FilterManyWhereInput
+    """Stage to find matching documents in"""
+    stage: Stage = DRAFT
+    """Stages to unpublish documents from"""
+    from: [Stage!]! = [PUBLISHED]
+    """"""
+    skip: Int
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """"""
+    before: ID
+    """"""
+    after: ID
+  ): FilterConnection!
+  """Update many filters"""
+  updateManyFilters(
+    """Documents to apply update on"""
+    where: FilterManyWhereInput
+    """Updates to document content"""
+    data: FilterUpdateManyInput!
+  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (updateManyFiltersConnection)")
+  """Delete many Filter documents"""
+  deleteManyFilters(
+    """Documents to delete"""
+    where: FilterManyWhereInput
+  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (deleteManyFiltersConnection)")
+  """Publish many Filter documents"""
+  publishManyFilters(
+    """Identifies documents in each stage to be published"""
+    where: FilterManyWhereInput
+    """Stages to publish documents to"""
+    to: [Stage!]! = [PUBLISHED]
+  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (publishManyFiltersConnection)")
+  """Unpublish many Filter documents"""
+  unpublishManyFilters(
+    """Identifies documents in each stage"""
+    where: FilterManyWhereInput
+    """Stages to unpublish documents from"""
+    from: [Stage!]! = [PUBLISHED]
+  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (unpublishManyFiltersConnection)")
+  """Schedule to publish one filter"""
+  schedulePublishFilter(
+    """Document to publish"""
+    where: FilterWhereUniqueInput!
+    """Publishing target stage"""
+    to: [Stage!]! = [PUBLISHED]
+    """Release at point in time, will create new release containing this operation"""
+    releaseAt: DateTime
+    """Optionally attach this scheduled operation to an existing release"""
+    releaseId: String
+  ): Filter
+  """Unpublish one filter from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only."""
+  scheduleUnpublishFilter(
+    """Document to unpublish"""
+    where: FilterWhereUniqueInput!
+    """Stages to unpublish document from"""
+    from: [Stage!]! = [PUBLISHED]
+    """Release at point in time, will create new release containing this operation"""
+    releaseAt: DateTime
+    """Optionally attach this scheduled operation to an existing release"""
+    releaseId: String
+  ): Filter
   """Create one asset"""
   createAsset(data: AssetCreateInput!): Asset @deprecated(reason: "Asset mutations will be overhauled soon")
   """Update one asset"""
@@ -3421,6 +4308,80 @@ type Query {
     """
     locales: [Locale!]! = [en]
   ): Node
+  """Retrieve multiple filters"""
+  filters(
+    """"""
+    where: FilterWhereInput
+    """"""
+    orderBy: FilterOrderByInput
+    """"""
+    skip: Int
+    """"""
+    after: String
+    """"""
+    before: String
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """"""
+    stage: Stage! = PUBLISHED
+    """
+    Defines which locales should be returned.
+    
+    Note that `Filter` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
+    """
+    locales: [Locale!]! = [en]
+  ): [Filter!]!
+  """Retrieve a single filter"""
+  filter(
+    """"""
+    where: FilterWhereUniqueInput!
+    """"""
+    stage: Stage! = PUBLISHED
+    """
+    Defines which locales should be returned.
+    
+    Note that `Filter` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
+    """
+    locales: [Locale!]! = [en]
+  ): Filter
+  """Retrieve multiple filters using the Relay connection interface"""
+  filtersConnection(
+    """"""
+    where: FilterWhereInput
+    """"""
+    orderBy: FilterOrderByInput
+    """"""
+    skip: Int
+    """"""
+    after: String
+    """"""
+    before: String
+    """"""
+    first: Int
+    """"""
+    last: Int
+    """"""
+    stage: Stage! = PUBLISHED
+    """
+    Defines which locales should be returned.
+    
+    Note that `Filter` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
+    """
+    locales: [Locale!]! = [en]
+  ): FilterConnection!
+  """Retrieve document version"""
+  filterVersion(where: VersionWhereInput!): DocumentVersion
   """Retrieve multiple users"""
   users(
     """"""
@@ -4082,7 +5043,7 @@ type ScheduledOperation implements Node {
 }
 
 """"""
-union ScheduledOperationAffectedDocument = Asset | Author | Category | Post
+union ScheduledOperationAffectedDocument = Asset | Author | Category | Filter | Post
 
 """"""
 input ScheduledOperationConnectInput {

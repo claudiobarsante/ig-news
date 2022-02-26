@@ -5,6 +5,7 @@ import { SubscribeButton } from '../components/SubscribeButton';
 import { stripe } from '../services/stripe';
 import styles from './../styles/pages/home.module.scss';
 import { FaGithub } from 'react-icons/fa';
+
 type Props = {
 	product: {
 		priceId: string;

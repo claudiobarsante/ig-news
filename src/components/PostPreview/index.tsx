@@ -4,7 +4,7 @@ import styles from 'templates/Posts/posts.module.scss';
 import { LoadMorePosts_posts } from 'graphql/generated/LoadMorePosts';
 import { memo } from 'react';
 import { lastSeenVar, PostSeen } from 'graphql/lib/apolloCache';
-
+import DOMPurify from 'dompurify';
 type Props = {
 	postContent: LoadMorePosts_posts;
 };
@@ -17,7 +17,7 @@ const PostPreviewComponent = ({ postContent }: Props) => {
 	const { updatedAt, slug, name, content } = postContent;
 
 	const convertedTime = convertDateTime(updatedAt);
-	const formatedContent = `${content.html.slice(0, 300)}...`;
+	const sanitizeContent = DOMPurify.sanitize(`${content.html.slice(0, 300)}...`);
 
 	const handleUpdateLastPostsSeen = () => {
 		const lastSeen = lastSeenVar();
@@ -34,7 +34,7 @@ const PostPreviewComponent = ({ postContent }: Props) => {
 
 					<div
 						className={styles['post__content']}
-						dangerouslySetInnerHTML={{ __html: formatedContent }}
+						dangerouslySetInnerHTML={{ __html: sanitizeContent }}
 					/>
 				</a>
 			</Link>
