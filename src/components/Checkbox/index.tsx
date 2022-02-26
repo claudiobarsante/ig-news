@@ -1,15 +1,25 @@
+import { InputHTMLAttributes, useCallback, useState } from 'react';
 import styles from 'templates/Posts/posts.module.scss';
 
 type CheckboxProps = {
 	name: string;
-	onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+	onCheck: (event: React.ChangeEvent<HTMLInputElement>) => void;
 	isChecked: boolean;
 	label: string;
-};
-const CheckBox = ({ name, onChange, isChecked, label }: CheckboxProps) => {
+	labelFor: string;
+} & InputHTMLAttributes<HTMLInputElement>;
+
+const CheckBox = ({ name, onCheck, isChecked = false, label, labelFor }: CheckboxProps) => {
+	const [checked, setChecked] = useState(isChecked);
+
+	const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+		setChecked(checked => !checked);
+		onCheck(event);
+	}, []);
+
 	return (
-		<label className={styles['checkbox-item']}>
-			<input type='checkbox' name={name} onChange={onChange} checked={isChecked} />
+		<label htmlFor={labelFor} className={styles['checkbox-item']}>
+			<input type='checkbox' name={name} onChange={handleChange} checked={checked} />
 			<span>{label}</span>
 		</label>
 	);

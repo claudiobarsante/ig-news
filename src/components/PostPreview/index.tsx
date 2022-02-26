@@ -4,7 +4,7 @@ import styles from 'templates/Posts/posts.module.scss';
 import { LoadMorePosts_posts } from 'graphql/generated/LoadMorePosts';
 import { memo } from 'react';
 import { lastSeenVar, PostSeen } from 'graphql/lib/apolloCache';
-import DOMPurify from 'dompurify';
+import DOMPurify from 'isomorphic-dompurify';
 type Props = {
 	postContent: LoadMorePosts_posts;
 };

@@ -1,15 +1,15 @@
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+// --Graphql
 import { initializeApollo } from 'graphql/lib/apolloClient';
-import { LOAD_MORE_POSTS_QUERY, QUERY_POSTS_PAGE } from 'graphql/queries';
-import { LoadMorePosts, LoadMorePostsVariables } from 'graphql/generated/LoadMorePosts';
-import { parseQueryStringToWhere } from 'utils/filter';
-import { PostOrderByInput } from '../../graphql/generated/globalTypes';
-import PostsPageTemplate, {
-	DEFAULT_LENGTH,
-	FilterItemsTypes,
-	PostsPageProps,
-} from 'templates/Posts';
+import { QUERY_POSTS_PAGE } from 'graphql/queries';
+import { PostOrderByInput } from 'graphql/generated/globalTypes';
 import { QueryPostsPage, QueryPostsPageVariables } from 'graphql/generated/QueryPostsPage';
+// -- Utils
+import { parseQueryStringToWhere } from 'utils/filter';
+// -- Templates
+import PostsPageTemplate, { DEFAULT_LENGTH } from 'templates/Posts';
+// - Types
+import { FilterItemsTypes, PostsPageProps } from 'templates/Posts/types';
 
 const Posts = ({ filterItems, postsCategories, postsFilters }: PostsPageProps) => (
 	<PostsPageTemplate

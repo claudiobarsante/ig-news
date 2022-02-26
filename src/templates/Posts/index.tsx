@@ -1,49 +1,22 @@
-import { GetServerSideProps, GetServerSidePropsContext, GetStaticProps } from 'next';
+import { useCallback, useEffect, useState } from 'react';
 import Head from 'next/head';
-import styles from 'templates/Posts/posts.module.scss';
-import Link from 'next/link';
-import { initializeApollo } from 'graphql/lib/apolloClient';
-import { LOAD_MORE_POSTS_QUERY, QUERY_POSTS_PAGE } from 'graphql/queries';
-import { useQuery } from '@apollo/client';
-import { LoadMorePosts, LoadMorePostsVariables } from 'graphql/generated/LoadMorePosts';
-import { convertDateTime } from 'utils/convertDateTime';
-import { useEffect, useState } from 'react';
-import { parseQueryStringToWhere } from 'utils/filter';
-import { PostOrderByInput } from '../../graphql/generated/globalTypes';
-import { ParsedUrlQuery, ParsedUrlQueryInput } from 'querystring';
 import { useRouter } from 'next/router';
+import { useQuery } from '@apollo/client';
+// -- Graphql
+import { LoadMorePosts, LoadMorePostsVariables } from 'graphql/generated/LoadMorePosts';
+import { PostOrderByInput } from 'graphql/generated/globalTypes';
+import { LOAD_MORE_POSTS_QUERY } from 'graphql/queries';
+// -- utils
+import { parseQueryStringToWhere } from 'utils/filter';
 import { checkPostsCount } from 'utils/checkPostsCount';
-import { PostPreview } from 'components/PostPreview';
-import { useApolloClient } from '@apollo/client';
-import {
-	QueryPostsPage_categories,
-	QueryPostsPage_filters,
-} from 'graphql/generated/QueryPostsPage';
+// -- Styles
+import styles from 'templates/Posts/posts.module.scss';
+// -- Custom components
 import CheckBox from 'components/Checkbox';
-
+import { PostPreview } from 'components/PostPreview';
+// -- Types
+import { Category, FilterItemsTypes, PostsPageProps } from './types';
 export const DEFAULT_LENGTH = 3;
-
-export type Category = {
-	[name: string]: boolean;
-};
-
-export type FilterItemsTypes = {
-	name: string;
-	type: 'checkbox' | 'radio';
-};
-
-// export function checkPostsCount(totalPosts: number, currentPosts: number) {
-// 	/*Graphcms has this property postsConnection that returns the total number of posts.
-// 	return data?.postsConnection.aggregate.count > data?.posts.length
-// 	So just compare the total x current number of posts. If they are equal there's no more posts tos how */
-// 	return totalPosts > currentPosts;
-// }
-
-export type PostsPageProps = {
-	filterItems: FilterItemsTypes[];
-	postsCategories: QueryPostsPage_categories[];
-	postsFilters: QueryPostsPage_filters[];
-};
 
 const PostsPageTemplate = ({ filterItems, postsCategories, postsFilters }: PostsPageProps) => {
 	const [radio, setRadio] = useState('publishedAt_DESC');
@@ -92,7 +65,7 @@ const PostsPageTemplate = ({ filterItems, postsCategories, postsFilters }: Posts
 		push({ pathname, query });
 	};
 
-	const handleShowMore = () => {
+	const handleShowMore = useCallback(() => {
 		fetchMore({
 			variables: {
 				first: DEFAULT_LENGTH,
@@ -102,15 +75,15 @@ const PostsPageTemplate = ({ filterItems, postsCategories, postsFilters }: Posts
 			},
 			//notifyOnNetworkStatusChange: true,
 		});
-	};
+	}, []);
 
-	const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleRadioChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
 		setRadio(e.target.value);
-	};
+	}, []);
 
-	const handleCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleCheckboxChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
 		setCategories(categories => ({ ...categories, [e.target.name]: e.target.checked }));
-	};
+	}, []);
 
 	const isToShowButton = checkPostsCount(data?.postsConnection.aggregate.count, data?.posts.length);
 
@@ -128,15 +101,17 @@ const PostsPageTemplate = ({ filterItems, postsCategories, postsFilters }: Posts
 							postsCategories.map(category => (
 								<CheckBox
 									key={category.id}
-									name={category.name}
-									onChange={handleCheck}
 									isChecked={categories[category.name]}
 									label={category.label}
+									labelFor={category.name}
+									name={category.name}
+									onCheck={handleCheckboxChange}
 								/>
 							))}
 
 						<div className={styles['orderBy']}>
 							<h3>Order by</h3>
+
 							<div className={styles['orderBy__radio']}>
 								<input
 									checked={radio === 'publishedAt_DESC'}

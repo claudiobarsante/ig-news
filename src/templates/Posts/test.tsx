@@ -3,12 +3,12 @@ import userEvent from '@testing-library/user-event';
 import { MockedProvider } from '@apollo/client/testing';
 import Posts from '../../pages/posts';
 
-import { postMock, postFetchMoreMock } from '../mocks/mocks';
+import { postMock, postFetchMoreMock } from './mocks';
 import apolloCache from '../../graphql/lib/apolloCache';
 
 import { mocked } from 'jest-mock';
 import { checkPostsCount } from '../../utils/checkPostsCount';
-import { FilterItemsTypes } from 'templates/Posts';
+import { FilterItemsTypes } from 'templates/Posts/types';
 
 const filterItems: FilterItemsTypes[] = [
 	{ name: 'category', type: 'checkbox' },
