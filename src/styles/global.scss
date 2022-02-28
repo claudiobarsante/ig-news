@@ -7,6 +7,7 @@
 }
 
 :root {
+	// -- colors
 	--color-white: #ffffff;
 
 	--color-gray-100: #e1e1e6;
@@ -20,6 +21,10 @@
 	--color-yellow-500: #eba417;
 
 	--color-green: #04d361;
+
+	// -- transitions
+	--transition-default: '0.3s ease-in-out';
+	--transition-fast: '0.1s ease-in-out';
 }
 
 html {

@@ -1,5 +1,6 @@
 import { InputHTMLAttributes, useCallback, useState } from 'react';
 import styles from 'templates/Posts/posts.module.scss';
+import checkboxStyles from './checkbox.module.scss';
 
 type CheckboxProps = {
 	name: string;
@@ -19,7 +20,13 @@ const CheckBox = ({ name, onCheck, isChecked = false, label, labelFor }: Checkbo
 
 	return (
 		<label data-testid='label' htmlFor={labelFor} className={styles['checkbox-item']}>
-			<input type='checkbox' name={name} onChange={handleChange} checked={checked} />
+			<input
+				className={checkboxStyles['checkbox']}
+				type='checkbox'
+				name={name}
+				onChange={handleChange}
+				checked={checked}
+			/>
 			<span>{label}</span>
 		</label>
 	);

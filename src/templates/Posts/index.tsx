@@ -79,6 +79,7 @@ const PostsPageTemplate = ({ filterItems, postsCategories, postsFilters }: Posts
 	}, []);
 
 	const handleRadioChange = useCallback((value: string) => {
+		console.log('passei', value);
 		setRadio(value);
 	}, []);
 
@@ -120,33 +121,10 @@ const PostsPageTemplate = ({ filterItems, postsCategories, postsFilters }: Posts
 										label={filter.label}
 										name={filter.name}
 										value={filter.value}
-										onChange={() => handleRadioChange(filter.value)}
-										checked={radio === filter.value}
-										onLabelClick={() => handleRadioChange(filter.value)}
+										onCheck={() => handleRadioChange(filter.value)}
+										defaultChecked={radio === filter.value}
 									/>
 								))}
-							{/* <div className={styles['orderBy__radio']}>
-								<input
-									checked={radio === 'publishedAt_DESC'}
-									id='newest'
-									name='radioGroup'
-									onChange={handleRadioChange}
-									type='radio'
-									value='publishedAt_DESC'
-								/>
-								<label htmlFor='newest'>Newest first</label>
-							</div>
-							<div className={styles['orderBy__radio']}>
-								<input
-									checked={radio === 'publishedAt_ASC'}
-									id='oldest'
-									name='radioGroup'
-									onChange={handleRadioChange}
-									type='radio'
-									value='publishedAt_ASC'
-								/>
-								<label htmlFor='oldest'>Oldest first</label>
-							</div> */}
 						</div>
 					</fieldset>
 				</aside>

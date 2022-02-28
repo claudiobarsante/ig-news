@@ -50,6 +50,7 @@
 }
 
 .orderBy__radio {
+	display: flex;
 	margin: 1rem 0;
 
 	label {
@@ -58,6 +59,7 @@
 }
 
 .checkbox-item {
+	display: flex;
 	margin: 0.5rem 0;
 
 	input {
