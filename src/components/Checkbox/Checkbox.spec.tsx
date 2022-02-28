@@ -17,7 +17,10 @@ describe('Checkbox', () => {
 		debug(container);
 		expect(screen.getByRole('checkbox')).toBeInTheDocument();
 		expect(screen.getByText(/Programming/i)).toBeInTheDocument();
-		//expect(screen.getByText(/Programming/i)).toHaveAttribute('for', 'check');
+
+		const label = screen.getByTestId('label');
+		expect(label).toHaveClass('checkbox-item');
+		expect(label).toHaveAttribute('for', 'programming');
 	});
 
 	it('should call handleCheckboxChange when status change', async () => {

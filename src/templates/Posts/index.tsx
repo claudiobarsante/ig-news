@@ -14,6 +14,7 @@ import styles from 'templates/Posts/posts.module.scss';
 // -- Custom components
 import CheckBox from 'components/Checkbox';
 import { PostPreview } from 'components/PostPreview';
+import Radio from 'components/Radio';
 // -- Types
 import { Category, FilterItemsTypes, PostsPageProps } from './types';
 export const DEFAULT_LENGTH = 3;
@@ -77,8 +78,8 @@ const PostsPageTemplate = ({ filterItems, postsCategories, postsFilters }: Posts
 		});
 	}, []);
 
-	const handleRadioChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-		setRadio(e.target.value);
+	const handleRadioChange = useCallback((value: string) => {
+		setRadio(value);
 	}, []);
 
 	const handleCheckboxChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,8 +112,20 @@ const PostsPageTemplate = ({ filterItems, postsCategories, postsFilters }: Posts
 
 						<div className={styles['orderBy']}>
 							<h3>Order by</h3>
-
-							<div className={styles['orderBy__radio']}>
+							{postsFilters &&
+								postsFilters.map(filter => (
+									<Radio
+										key={filter.id}
+										id={filter.id}
+										label={filter.label}
+										name={filter.name}
+										value={filter.value}
+										onChange={() => handleRadioChange(filter.value)}
+										checked={radio === filter.value}
+										onLabelClick={() => handleRadioChange(filter.value)}
+									/>
+								))}
+							{/* <div className={styles['orderBy__radio']}>
 								<input
 									checked={radio === 'publishedAt_DESC'}
 									id='newest'
@@ -133,7 +146,7 @@ const PostsPageTemplate = ({ filterItems, postsCategories, postsFilters }: Posts
 									value='publishedAt_ASC'
 								/>
 								<label htmlFor='oldest'>Oldest first</label>
-							</div>
+							</div> */}
 						</div>
 					</fieldset>
 				</aside>

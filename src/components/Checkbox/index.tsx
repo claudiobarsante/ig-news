@@ -18,7 +18,7 @@ const CheckBox = ({ name, onCheck, isChecked = false, label, labelFor }: Checkbo
 	}, []);
 
 	return (
-		<label htmlFor={labelFor} className={styles['checkbox-item']}>
+		<label data-testid='label' htmlFor={labelFor} className={styles['checkbox-item']}>
 			<input type='checkbox' name={name} onChange={handleChange} checked={checked} />
 			<span>{label}</span>
 		</label>
