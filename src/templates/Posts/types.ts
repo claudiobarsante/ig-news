@@ -14,6 +14,6 @@ export type FilterItemsTypes = {
 
 export type PostsPageProps = {
 	filterItems: FilterItemsTypes[];
-	postsCategories: QueryPostsPage_categories[];
-	postsFilters: QueryPostsPage_filters[];
+	//postsCategories: QueryPostsPage_categories[];
+	//postsFilters: QueryPostsPage_filters[];
 };

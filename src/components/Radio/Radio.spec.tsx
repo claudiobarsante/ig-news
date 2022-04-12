@@ -1,5 +1,6 @@
 import { screen, render, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React, { useState } from 'react';
 
 import Radio from '.';
 
@@ -48,7 +49,12 @@ describe('<Radio/>', () => {
 	});
 
 	it('should have property check = true when value === mock', () => {
-		const mockedValue = 'publishedAt_DESC';
+		const realUseState = React.useState;
+
+		const stubInitialState = ['publishedAt_DESC'];
+		// Mock useState before rendering your component
+		jest.spyOn(React, 'useState').mockImplementationOnce(() => realUseState(stubInitialState));
+
 		const handleRadioChange = jest.fn();
 		render(
 			<Radio
@@ -56,12 +62,12 @@ describe('<Radio/>', () => {
 				label='Newest first'
 				name='postsOrderBy'
 				value='publishedAt_DESC'
-				defaultChecked={mockedValue === 'publishedAt_DESC'}
+				defaultChecked={stubInitialState[0] === 'publishedAt_DESC'}
 				onCheck={() => handleRadioChange('publishedAt_DESC')}
 			/>
 		);
+
 		const radio = screen.getByRole('radio');
-		userEvent.click(radio);
 		expect(radio).toBeChecked();
 	});
 });

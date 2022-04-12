@@ -11,11 +11,11 @@ import PostsPageTemplate, { DEFAULT_LENGTH } from 'templates/Posts';
 // - Types
 import { FilterItemsTypes, PostsPageProps } from 'templates/Posts/types';
 
-const Posts = ({ filterItems, postsCategories, postsFilters }: PostsPageProps) => (
+const Posts = ({ filterItems }: PostsPageProps) => (
 	<PostsPageTemplate
 		filterItems={filterItems}
-		postsCategories={postsCategories}
-		postsFilters={postsFilters}
+		//postsCategories={postsCategories}
+		//postsFilters={postsFilters}
 	/>
 );
 
@@ -29,10 +29,10 @@ export const getServerSideProps: GetServerSideProps = async ({
 		{ name: 'author', type: 'checkbox' },
 		{ name: 'orderBy', type: 'radio' },
 	];
-
+	console.log('query-server', query);
 	const apolloClient = initializeApollo();
 
-	const { data, error } = await apolloClient.query<QueryPostsPage, QueryPostsPageVariables>({
+	const { error } = await apolloClient.query<QueryPostsPage, QueryPostsPageVariables>({
 		query: QUERY_POSTS_PAGE,
 		variables: {
 			first: DEFAULT_LENGTH,
@@ -56,8 +56,8 @@ export const getServerSideProps: GetServerSideProps = async ({
 		props: {
 			initialApolloState: apolloClient.cache.extract(), //initial load to cache
 			filterItems: FILTER_ITEMS,
-			postsCategories: data.categories,
-			postsFilters: data.filters,
+			//postsCategories: data.categories,
+			//postsFilters: data.filters,
 		},
 	};
 };

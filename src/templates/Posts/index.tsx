@@ -5,7 +5,7 @@ import { useQuery } from '@apollo/client';
 // -- Graphql
 import { LoadMorePosts, LoadMorePostsVariables } from 'graphql/generated/LoadMorePosts';
 import { PostOrderByInput } from 'graphql/generated/globalTypes';
-import { LOAD_MORE_POSTS_QUERY } from 'graphql/queries';
+import { LOAD_MORE_POSTS_QUERY, QUERY_POSTS_PAGE } from 'graphql/queries';
 // -- utils
 import { parseQueryStringToWhere } from 'utils/filter';
 import { checkPostsCount } from 'utils/checkPostsCount';
@@ -17,17 +17,21 @@ import { PostPreview } from 'components/PostPreview';
 import Radio from 'components/Radio';
 // -- Types
 import { Category, FilterItemsTypes, PostsPageProps } from './types';
+import { QueryPostsPage, QueryPostsPageVariables } from 'graphql/generated/QueryPostsPage';
 export const DEFAULT_LENGTH = 3;
 
-const PostsPageTemplate = ({ filterItems, postsCategories, postsFilters }: PostsPageProps) => {
+const PostsPageTemplate = ({ filterItems }: PostsPageProps) => {
 	const [radio, setRadio] = useState('publishedAt_DESC');
 	const [categories, setCategories] = useState<Category>({});
+	const [count, setCount] = useState(3);
 
 	const { push, query, pathname } = useRouter();
 
-	const { data, loading, error, fetchMore } = useQuery<LoadMorePosts, LoadMorePostsVariables>(
-		LOAD_MORE_POSTS_QUERY,
+	console.log('query', query);
+	const { data, error, fetchMore, loading } = useQuery<QueryPostsPage, QueryPostsPageVariables>(
+		QUERY_POSTS_PAGE,
 		{
+			notifyOnNetworkStatusChange: true,
 			variables: {
 				first: DEFAULT_LENGTH,
 				skip: 0,
@@ -38,10 +42,25 @@ const PostsPageTemplate = ({ filterItems, postsCategories, postsFilters }: Posts
 			},
 		}
 	);
+	if (!data) return;
+
+	// const { data, loading, error, fetchMore } = useQuery<LoadMorePosts, LoadMorePostsVariables>(
+	// 	LOAD_MORE_POSTS_QUERY,
+	// 	{
+	// 		variables: {
+	// 			first: DEFAULT_LENGTH,
+	// 			skip: 0,
+	// 			where: parseQueryStringToWhere({ queryString: query, filterItems }),
+	// 			orderBy: query?.orderBy
+	// 				? PostOrderByInput[query.orderBy as string]
+	// 				: PostOrderByInput.publishedAt_DESC,
+	// 		},
+	// 	}
+	// );
 
 	useEffect(() => {
 		let temp = {};
-		Object.keys(postsCategories).forEach(key => (temp[key] = false));
+		data?.categories && Object.keys(data.categories).forEach(key => (temp[key] = false));
 		setCategories(temp);
 	}, []);
 
@@ -59,27 +78,24 @@ const PostsPageTemplate = ({ filterItems, postsCategories, postsFilters }: Posts
 				}
 			}
 		}
+		if (updatedCategoriesQuery.length > 0) query['category'] = updatedCategoriesQuery;
 
-		query['category'] = updatedCategoriesQuery;
 		query['orderBy'] = radio;
 
 		push({ pathname, query });
 	};
 
+	const { posts } = data;
 	const handleShowMore = useCallback(() => {
 		fetchMore({
 			variables: {
 				first: DEFAULT_LENGTH,
-				skip: data?.posts.length,
-				where: parseQueryStringToWhere({ queryString: query, filterItems }),
-				orderBy: PostOrderByInput[query.orderBy as string],
+				skip: posts.length,
 			},
-			//notifyOnNetworkStatusChange: true,
 		});
-	}, []);
+	}, [posts]);
 
 	const handleRadioChange = useCallback((value: string) => {
-		console.log('passei', value);
 		setRadio(value);
 	}, []);
 
@@ -87,7 +103,10 @@ const PostsPageTemplate = ({ filterItems, postsCategories, postsFilters }: Posts
 		setCategories(categories => ({ ...categories, [e.target.name]: e.target.checked }));
 	}, []);
 
-	const isToShowButton = checkPostsCount(data?.postsConnection.aggregate.count, data?.posts.length);
+	const isToShowButton = checkPostsCount(
+		data?.postsConnection?.aggregate?.count,
+		data?.posts?.length
+	);
 
 	return (
 		<>
@@ -99,8 +118,8 @@ const PostsPageTemplate = ({ filterItems, postsCategories, postsFilters }: Posts
 				<aside className={styles['aside']}>
 					<fieldset className={styles['filters']}>
 						<h3>Categories</h3>
-						{postsCategories &&
-							postsCategories.map(category => (
+						{data?.categories &&
+							data.categories.map(category => (
 								<CheckBox
 									key={category.id}
 									isChecked={categories[category.name]}
@@ -113,8 +132,8 @@ const PostsPageTemplate = ({ filterItems, postsCategories, postsFilters }: Posts
 
 						<div className={styles['orderBy']}>
 							<h3>Order by</h3>
-							{postsFilters &&
-								postsFilters.map(filter => (
+							{data?.filters &&
+								data.filters.map(filter => (
 									<Radio
 										key={filter.id}
 										id={filter.id}
@@ -129,7 +148,7 @@ const PostsPageTemplate = ({ filterItems, postsCategories, postsFilters }: Posts
 					</fieldset>
 				</aside>
 				<section className={styles['posts']}>
-					{data && data.posts.map(post => <PostPreview key={post.id} postContent={post} />)}
+					{data?.posts && data.posts.map(post => <PostPreview key={post.id} postContent={post} />)}
 					<div className={styles['loading-container']}>
 						{isToShowButton && (
 							<button className={styles['button']} type='button' onClick={() => handleShowMore()}>

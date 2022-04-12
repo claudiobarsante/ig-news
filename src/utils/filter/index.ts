@@ -1,9 +1,6 @@
 import { ParsedUrlQueryInput } from 'querystring';
-import { FilterItemsTypes } from 'templates/Posts';
-// type Filter = {
-// 	name: string;
-// 	type: string;
-// };
+import { FilterItemsTypes } from 'templates/Posts/types';
+
 type ParseArgs = {
 	queryString: ParsedUrlQueryInput;
 	filterItems: FilterItemsTypes[];
