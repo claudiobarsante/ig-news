@@ -3,6 +3,7 @@ import * as Post from '.';
 import { LoadMorePosts_posts } from 'graphql/generated/LoadMorePosts';
 import { mocked } from 'jest-mock';
 import { convertDateTime } from 'utils/convertDateTime';
+//import DOMPurify from 'isomorphic-dompurify';
 
 const post: LoadMorePosts_posts = {
 	id: 'ckxjc2rqgwimt0e82jas9u0pm',
@@ -25,6 +26,14 @@ jest.mock('next/link', () => {
 	return ({ children, href }: React.PropsWithChildren<LinkProps>) =>
 		React.cloneElement(React.Children.only(children), { href });
 });
+
+jest.mock('isomorphic-dompurify', () => {
+	return {
+		sanitize: jest.fn(),
+	};
+});
+
+//DOMPurify.sanitize = jest.fn();
 
 describe('<PostPreview/>', () => {
 	it('should render the <PostPreview/>', () => {

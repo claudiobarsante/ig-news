@@ -2,14 +2,15 @@ import {
 	QueryPostsPage_categories,
 	QueryPostsPage_filters,
 } from 'graphql/generated/QueryPostsPage';
+import { DEFAULT_LENGTH } from '.';
 import { PostOrderByInput } from '../../graphql/generated/globalTypes';
-import { LOAD_MORE_POSTS_QUERY } from '../../graphql/queries';
+import { LOAD_MORE_POSTS_QUERY, QUERY_POSTS_PAGE } from '../../graphql/queries';
 
 export const postMock = {
 	request: {
-		query: LOAD_MORE_POSTS_QUERY,
+		query: QUERY_POSTS_PAGE,
 		variables: {
-			first: 3,
+			first: DEFAULT_LENGTH,
 			skip: 0,
 			where: {},
 			orderBy: PostOrderByInput.publishedAt_DESC,
@@ -17,6 +18,25 @@ export const postMock = {
 	},
 	result: jest.fn().mockReturnValue({
 		data: {
+			categories: [
+				{
+					formType: 'checkbox',
+					id: 'ckxi3ghcg5a5f0e82mlg4ymvl',
+					label: 'Programming',
+					name: 'programming',
+					__typename: 'Category',
+				},
+			],
+			filters: [
+				{
+					formType: 'radio',
+					id: 'cl03xm53jjhhc0goh3v866r',
+					label: 'Newest first',
+					name: 'postsOrderBy',
+					value: 'publishedAt_DESC',
+					__typename: 'Filter',
+				},
+			],
 			posts: [
 				{
 					__typename: 'Post',
@@ -24,11 +44,12 @@ export const postMock = {
 					updatedAt: '2021-12-20T17:50:39.983534+00:00',
 					slug: 'slug1',
 					name: 'test1',
-					content: { __typename: 'RichText', html: '<p>eeeeeeeeee</p>' },
+					content: { __typename: 'RichText', html: '<p>Testing</p>' },
 				},
 			],
 			postsConnection: {
 				aggregate: {
+					__typename: 'Aggregate',
 					count: 12,
 				},
 			},
@@ -38,7 +59,7 @@ export const postMock = {
 
 export const postFetchMoreMock = {
 	request: {
-		query: LOAD_MORE_POSTS_QUERY,
+		query: QUERY_POSTS_PAGE,
 		variables: {
 			first: 3,
 			skip: 1,
@@ -48,6 +69,25 @@ export const postFetchMoreMock = {
 	},
 	result: jest.fn().mockReturnValue({
 		data: {
+			categories: [
+				{
+					formType: 'checkbox',
+					id: 'ckxi3ghcg5a5f0e82mlg4ymvl',
+					label: 'Programming',
+					name: 'programming',
+					__typename: 'Category',
+				},
+			],
+			filters: [
+				{
+					formType: 'radio',
+					id: 'cl03xm53jjhhc0goh3v866r',
+					label: 'Newest first',
+					name: 'postsOrderBy',
+					value: 'publishedAt_DESC',
+					__typename: 'Filter',
+				},
+			],
 			posts: [
 				{
 					__typename: 'Post',

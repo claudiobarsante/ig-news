@@ -5,6 +5,7 @@ import { LoadMorePosts_posts } from 'graphql/generated/LoadMorePosts';
 import { memo } from 'react';
 import { lastSeenVar, PostSeen } from 'graphql/lib/apolloCache';
 import DOMPurify from 'isomorphic-dompurify';
+
 type Props = {
 	postContent: LoadMorePosts_posts;
 };
@@ -18,7 +19,7 @@ const PostPreviewComponent = ({ postContent }: Props) => {
 
 	const convertedTime = convertDateTime(updatedAt);
 	const sanitizeContent = DOMPurify.sanitize(`${content.html.slice(0, 300)}...`);
-
+	//const sanitizeContent = `${content.html.slice(0, 300)}...`;
 	const handleUpdateLastPostsSeen = () => {
 		const lastSeen = lastSeenVar();
 		const newEntry = createLastSeenPostEntry({ slug, name });

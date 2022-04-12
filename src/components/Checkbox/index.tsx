@@ -8,9 +8,10 @@ type CheckboxProps = {
 	isChecked: boolean;
 	label: string;
 	labelFor: string;
+	id: string;
 } & InputHTMLAttributes<HTMLInputElement>;
 
-const CheckBox = ({ name, onCheck, isChecked = false, label, labelFor }: CheckboxProps) => {
+const CheckBox = ({ name, onCheck, isChecked = false, label, labelFor, id }: CheckboxProps) => {
 	const [checked, setChecked] = useState(isChecked);
 
 	const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,6 +22,7 @@ const CheckBox = ({ name, onCheck, isChecked = false, label, labelFor }: Checkbo
 	return (
 		<label data-testid='label' htmlFor={labelFor} className={styles['checkbox-item']}>
 			<input
+				data-testid={id}
 				className={checkboxStyles['checkbox']}
 				type='checkbox'
 				name={name}

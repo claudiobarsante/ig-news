@@ -12,6 +12,7 @@ import { FilterItemsTypes } from 'templates/Posts/types';
 import { checkPostsCount } from '../../utils/checkPostsCount';
 // -- mocks
 import { postMock, postFetchMoreMock, categoriesMock, filtersMock } from './mocks';
+import PostsPageTemplate from '.';
 
 const filterItems: FilterItemsTypes[] = [
 	{ name: 'category', type: 'checkbox' },
@@ -19,27 +20,37 @@ const filterItems: FilterItemsTypes[] = [
 	{ name: 'orderBy', type: 'radio' },
 ];
 
-jest.mock('next/router', () => ({
-	useRouter() {
-		return {
-			route: '/',
-			pathname: '',
-			query: [],
-			asPath: '',
-			push: jest.fn(),
-			events: {
-				on: jest.fn(),
-				off: jest.fn(),
-			},
-			beforePopState: jest.fn(() => null),
-			prefetch: jest.fn(() => null),
-		};
-	},
+//? Pode mockar assim também
+// jest.mock('next/router', () => ({
+// 	useRouter() {
+// 		return {
+// 			route: '/',
+// 			pathname: '',
+// 			query: [],
+// 			asPath: '',
+// 			push: jest.fn(),
+// 			events: {
+// 				on: jest.fn(),
+// 				off: jest.fn(),
+// 			},
+// 			beforePopState: jest.fn(() => null),
+// 			prefetch: jest.fn(() => null),
+// 		};
+// 	},
+// }));
+const useRouter = jest.spyOn(require('next/router'), 'useRouter');
+const push = jest.fn();
+
+useRouter.mockImplementation(() => ({
+	prefetch: jest.fn().mockResolvedValue(undefined),
+	push,
+	query: '',
+	asPath: '',
+	route: '/',
 }));
 
-//! Still have to figure out why it don't work importing function from Posts page
 jest.mock('../../utils/checkPostsCount', () => {
-	const original = jest.requireActual('../../utils/checkPostsCount'); // Step 2.
+	const original = jest.requireActual('../../utils/checkPostsCount');
 	return {
 		...original,
 		checkPostsCount: jest.fn(),
@@ -53,11 +64,7 @@ describe('Apollo', () => {
 
 		render(
 			<MockedProvider mocks={[postMock]}>
-				<Posts
-					filterItems={filterItems}
-					postsCategories={categoriesMock}
-					postsFilters={filtersMock}
-				/>
+				<PostsPageTemplate filterItems={filterItems} />
 			</MockedProvider>
 		);
 		await waitFor(() => expect(screen.getByRole('button', { name: /show more/i })));
@@ -65,27 +72,20 @@ describe('Apollo', () => {
 		await waitFor(() => expect(screen.getByText('test1')).toBeInTheDocument());
 	});
 
-	//!Still have to figure out why is not rendering with fetch more
 	it('should render more posts', async () => {
 		render(
 			<MockedProvider mocks={[postMock, postFetchMoreMock]} cache={apolloCache}>
-				<Posts
-					filterItems={filterItems}
-					postsCategories={categoriesMock}
-					postsFilters={filtersMock}
-				/>
+				<PostsPageTemplate filterItems={filterItems} />
 			</MockedProvider>
 		);
 
 		await waitFor(() => expect(screen.getByText('test1')).toBeInTheDocument());
 
-		const button = screen.queryByRole('button', { name: /show more/i });
+		userEvent.click(screen.queryByRole('button', { name: /show more/i }));
 
-		userEvent.click(button);
+		await waitFor(() => expect(screen.getByText('test2')).toBeInTheDocument());
 
-		//await waitFor(() => expect(screen.getByText('test2')).toBeInTheDocument());
-
-		screen.logTestingPlaygroundURL();
+		//screen.logTestingPlaygroundURL();
 	});
 
 	it('should not render the button load more', () => {
@@ -93,15 +93,32 @@ describe('Apollo', () => {
 		mockedCheckPostsCountFunction.mockReturnValue(false);
 		render(
 			<MockedProvider mocks={[postMock, postFetchMoreMock]} cache={apolloCache}>
-				<Posts
-					filterItems={filterItems}
-					postsCategories={categoriesMock}
-					postsFilters={filtersMock}
-				/>
+				<Posts filterItems={filterItems} />
 			</MockedProvider>
 		);
 
 		const button = screen.queryByRole('button', { name: /show more/i });
 		expect(button).not.toBeInTheDocument();
 	});
+
+	// it('should change push when selecting a category', async () => {
+	// 	const { container, debug } = render(
+	// 		<MockedProvider mocks={[postMock, postFetchMoreMock]} cache={apolloCache}>
+	// 			<PostsPageTemplate filterItems={filterItems} />
+	// 		</MockedProvider>
+	// 	);
+	// 	debug(container);
+	// 	//const radio = screen.findByRole('radio', { name: /newest first/i });
+	// 	//const button = screen.queryByRole('button', { name: /show more/i });
+	// 	//expect(button).toBeInTheDocument();
+	// 	//userEvent.click(await screen.findByRole('checkbox'));
+	// 	const checkbox = screen.findByTestId('ckxi3ghcg5a5f0e82mlg4ymvl');
+	// 	expect(checkbox).toBeInTheDocument();
+	// 	// userEvent.click(await screen.findByRole('radio', { name: /Newest first/i }));
+	// 	// expect(push).toHaveBeenCalledWith({
+	// 	// 	pathname: '/posts',
+	// 	// 	//query: { orderBy: 'publishedAt_ASC' },
+	// 	// 	query: { category: ['programming'], orderBy: 'publishedAt_ASC' },
+	// 	// });
+	// });
 });

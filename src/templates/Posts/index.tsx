@@ -23,11 +23,8 @@ export const DEFAULT_LENGTH = 3;
 const PostsPageTemplate = ({ filterItems }: PostsPageProps) => {
 	const [radio, setRadio] = useState('publishedAt_DESC');
 	const [categories, setCategories] = useState<Category>({});
-	const [count, setCount] = useState(3);
-
 	const { push, query, pathname } = useRouter();
 
-	console.log('query', query);
 	const { data, error, fetchMore, loading } = useQuery<QueryPostsPage, QueryPostsPageVariables>(
 		QUERY_POSTS_PAGE,
 		{
@@ -42,21 +39,6 @@ const PostsPageTemplate = ({ filterItems }: PostsPageProps) => {
 			},
 		}
 	);
-	if (!data) return;
-
-	// const { data, loading, error, fetchMore } = useQuery<LoadMorePosts, LoadMorePostsVariables>(
-	// 	LOAD_MORE_POSTS_QUERY,
-	// 	{
-	// 		variables: {
-	// 			first: DEFAULT_LENGTH,
-	// 			skip: 0,
-	// 			where: parseQueryStringToWhere({ queryString: query, filterItems }),
-	// 			orderBy: query?.orderBy
-	// 				? PostOrderByInput[query.orderBy as string]
-	// 				: PostOrderByInput.publishedAt_DESC,
-	// 		},
-	// 	}
-	// );
 
 	useEffect(() => {
 		let temp = {};
@@ -69,6 +51,7 @@ const PostsPageTemplate = ({ filterItems }: PostsPageProps) => {
 	}, [radio, categories]);
 
 	const updateQueryResuts = () => {
+		if (!query) return;
 		let updatedCategoriesQuery = [];
 
 		for (let category in categories) {
@@ -85,15 +68,14 @@ const PostsPageTemplate = ({ filterItems }: PostsPageProps) => {
 		push({ pathname, query });
 	};
 
-	const { posts } = data;
 	const handleShowMore = useCallback(() => {
 		fetchMore({
 			variables: {
 				first: DEFAULT_LENGTH,
-				skip: posts.length,
+				skip: data.posts.length,
 			},
 		});
-	}, [posts]);
+	}, [data?.posts]);
 
 	const handleRadioChange = useCallback((value: string) => {
 		setRadio(value);
@@ -121,6 +103,7 @@ const PostsPageTemplate = ({ filterItems }: PostsPageProps) => {
 						{data?.categories &&
 							data.categories.map(category => (
 								<CheckBox
+									id={category.id}
 									key={category.id}
 									isChecked={categories[category.name]}
 									label={category.label}

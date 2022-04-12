@@ -11,13 +11,7 @@ import PostsPageTemplate, { DEFAULT_LENGTH } from 'templates/Posts';
 // - Types
 import { FilterItemsTypes, PostsPageProps } from 'templates/Posts/types';
 
-const Posts = ({ filterItems }: PostsPageProps) => (
-	<PostsPageTemplate
-		filterItems={filterItems}
-		//postsCategories={postsCategories}
-		//postsFilters={postsFilters}
-	/>
-);
+const Posts = ({ filterItems }: PostsPageProps) => <PostsPageTemplate filterItems={filterItems} />;
 
 export default Posts;
 

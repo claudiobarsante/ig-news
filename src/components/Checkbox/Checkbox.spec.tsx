@@ -14,7 +14,7 @@ describe('Checkbox', () => {
 				onCheck={handleCheckboxChange}
 			/>
 		);
-		debug(container);
+		//debug(container);
 		expect(screen.getByRole('checkbox')).toBeInTheDocument();
 		expect(screen.getByText(/Programming/i)).toBeInTheDocument();
 
