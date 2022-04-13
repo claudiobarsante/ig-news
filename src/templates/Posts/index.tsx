@@ -18,6 +18,8 @@ import Radio from 'components/Radio';
 // -- Types
 import { Category, FilterItemsTypes, PostsPageProps } from './types';
 import { QueryPostsPage, QueryPostsPageVariables } from 'graphql/generated/QueryPostsPage';
+import { ParsedUrlQueryInput } from 'querystring';
+
 export const DEFAULT_LENGTH = 3;
 
 const PostsPageTemplate = ({ filterItems }: PostsPageProps) => {
@@ -40,11 +42,11 @@ const PostsPageTemplate = ({ filterItems }: PostsPageProps) => {
 		}
 	);
 
-	useEffect(() => {
-		let temp = {};
-		data?.categories && Object.keys(data.categories).forEach(key => (temp[key] = false));
-		setCategories(temp);
-	}, []);
+	// useEffect(() => {
+	// 	let temp = {};
+	// 	data?.categories && Object.keys(data.categories).forEach(key => (temp[key] = false));
+	// 	setCategories(temp);
+	// }, []);
 
 	useEffect(() => {
 		updateQueryResuts();
@@ -52,20 +54,25 @@ const PostsPageTemplate = ({ filterItems }: PostsPageProps) => {
 
 	const updateQueryResuts = () => {
 		if (!query) return;
-		let updatedCategoriesQuery = [];
 
-		for (let category in categories) {
-			if (categories[category]) {
-				if (updatedCategoriesQuery.indexOf(category) === -1) {
-					updatedCategoriesQuery.push(category);
+		let updatedQuery: any = {};
+
+		if (Object.keys(categories).length > 0) {
+			updatedQuery.category = [];
+
+			for (let item in categories) {
+				if (categories[item]) {
+					const currentCategories = updatedQuery.category;
+					//updatedQuery = { ...updatedQuery, category: xor(currentCategories, [item]) };
+					updatedQuery = { ...updatedQuery, category: [...currentCategories, ...[item]] };
 				}
 			}
 		}
-		if (updatedCategoriesQuery.length > 0) query['category'] = updatedCategoriesQuery;
 
-		query['orderBy'] = radio;
+		updatedQuery = { ...updatedQuery, orderBy: radio };
 
-		push({ pathname, query });
+		push({ pathname: '/posts', query: updatedQuery });
+		return;
 	};
 
 	const handleShowMore = useCallback(() => {
@@ -82,6 +89,7 @@ const PostsPageTemplate = ({ filterItems }: PostsPageProps) => {
 	}, []);
 
 	const handleCheckboxChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+		//console.log('e--', e.target.name, e.target.checked, 'categories', categories);
 		setCategories(categories => ({ ...categories, [e.target.name]: e.target.checked }));
 	}, []);
 
@@ -103,7 +111,6 @@ const PostsPageTemplate = ({ filterItems }: PostsPageProps) => {
 						{data?.categories &&
 							data.categories.map(category => (
 								<CheckBox
-									id={category.id}
 									key={category.id}
 									isChecked={categories[category.name]}
 									label={category.label}

@@ -25,6 +25,7 @@
 		"faunadb": "^4.3.0",
 		"graphql": "^15.0.0",
 		"isomorphic-dompurify": "^0.18.0",
+		"lodash.xor": "^4.5.0",
 		"micro": "^9.3.4",
 		"next": "^12.1.0",
 		"next-auth": "^4.2.1",

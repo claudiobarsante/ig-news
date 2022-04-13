@@ -93,7 +93,7 @@ describe('Apollo', () => {
 		mockedCheckPostsCountFunction.mockReturnValue(false);
 		render(
 			<MockedProvider mocks={[postMock, postFetchMoreMock]} cache={apolloCache}>
-				<Posts filterItems={filterItems} />
+				<PostsPageTemplate filterItems={filterItems} />
 			</MockedProvider>
 		);
 
@@ -101,24 +101,20 @@ describe('Apollo', () => {
 		expect(button).not.toBeInTheDocument();
 	});
 
-	// it('should change push when selecting a category', async () => {
-	// 	const { container, debug } = render(
-	// 		<MockedProvider mocks={[postMock, postFetchMoreMock]} cache={apolloCache}>
-	// 			<PostsPageTemplate filterItems={filterItems} />
-	// 		</MockedProvider>
-	// 	);
-	// 	debug(container);
-	// 	//const radio = screen.findByRole('radio', { name: /newest first/i });
-	// 	//const button = screen.queryByRole('button', { name: /show more/i });
-	// 	//expect(button).toBeInTheDocument();
-	// 	//userEvent.click(await screen.findByRole('checkbox'));
-	// 	const checkbox = screen.findByTestId('ckxi3ghcg5a5f0e82mlg4ymvl');
-	// 	expect(checkbox).toBeInTheDocument();
-	// 	// userEvent.click(await screen.findByRole('radio', { name: /Newest first/i }));
-	// 	// expect(push).toHaveBeenCalledWith({
-	// 	// 	pathname: '/posts',
-	// 	// 	//query: { orderBy: 'publishedAt_ASC' },
-	// 	// 	query: { category: ['programming'], orderBy: 'publishedAt_ASC' },
-	// 	// });
-	// });
+	it('should change push when selecting a category', async () => {
+		const { container, debug } = render(
+			<MockedProvider mocks={[postMock, postFetchMoreMock]} cache={apolloCache}>
+				<PostsPageTemplate filterItems={filterItems} />
+			</MockedProvider>
+		);
+		//debug(container);
+
+		userEvent.click(await screen.findByRole('checkbox', { name: /programming/i }));
+		userEvent.click(await screen.findByRole('radio', { name: /newest first/i }));
+
+		expect(push).toHaveBeenCalledWith({
+			pathname: '/posts',
+			query: { category: ['programming'], orderBy: 'publishedAt_ASC' },
+		});
+	});
 });
