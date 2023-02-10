@@ -42,12 +42,6 @@ const PostsPageTemplate = ({ filterItems }: PostsPageProps) => {
 		}
 	);
 
-	// useEffect(() => {
-	// 	let temp = {};
-	// 	data?.categories && Object.keys(data.categories).forEach(key => (temp[key] = false));
-	// 	setCategories(temp);
-	// }, []);
-
 	useEffect(() => {
 		updateQueryResuts();
 	}, [radio, categories]);
@@ -55,15 +49,14 @@ const PostsPageTemplate = ({ filterItems }: PostsPageProps) => {
 	const updateQueryResuts = () => {
 		if (!query) return;
 
-		let updatedQuery: any = {};
+		let updatedQuery: ParsedUrlQueryInput = {};
 
 		if (Object.keys(categories).length > 0) {
 			updatedQuery.category = [];
 
 			for (let item in categories) {
 				if (categories[item]) {
-					const currentCategories = updatedQuery.category;
-					//updatedQuery = { ...updatedQuery, category: xor(currentCategories, [item]) };
+					const currentCategories = updatedQuery.category as [];
 					updatedQuery = { ...updatedQuery, category: [...currentCategories, ...[item]] };
 				}
 			}
@@ -89,7 +82,6 @@ const PostsPageTemplate = ({ filterItems }: PostsPageProps) => {
 	}, []);
 
 	const handleCheckboxChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-		//console.log('e--', e.target.name, e.target.checked, 'categories', categories);
 		setCategories(categories => ({ ...categories, [e.target.name]: e.target.checked }));
 	}, []);
 

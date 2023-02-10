@@ -1,10 +1,11 @@
-import NextAuth from 'next-auth';
+import NextAuth, { NextAuthOptions } from 'next-auth';
+import type { NextApiRequest, NextApiResponse } from 'next';
 //import Providers from 'next-auth/providers';
 import GitHubProvider from 'next-auth/providers/github';
 import { fauna } from '../../../services/fauna';
 import { query as q } from 'faunadb';
 
-export default NextAuth({
+export const authOptions: NextAuthOptions = {
 	providers: [
 		GitHubProvider({
 			clientId: process.env.GITHUB_CLIENT_ID,
@@ -64,4 +65,8 @@ export default NextAuth({
 			}
 		},
 	},
-});
+};
+
+const Auth = (req: NextApiRequest, res: NextApiResponse) => NextAuth(req, res, authOptions);
+
+export default Auth;

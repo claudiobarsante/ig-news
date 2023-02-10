@@ -108,6 +108,7 @@ describe('Apollo', () => {
 			</MockedProvider>
 		);
 		//debug(container);
+		expect(await screen.findByRole('checkbox', { name: /programming/i })).toBeInTheDocument();
 
 		userEvent.click(await screen.findByRole('checkbox', { name: /programming/i }));
 		userEvent.click(await screen.findByRole('radio', { name: /newest first/i }));
